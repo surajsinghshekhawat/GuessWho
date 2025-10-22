@@ -32,7 +32,7 @@ const GamePage = () => {
     lastQuestion,
     lastAnswer,
     selectSecretCharacter,
-    eliminateCharacter,
+    toggleEliminated,
     guessCharacter,
     askQuestion,
     answerQuestion,
@@ -77,7 +77,7 @@ const GamePage = () => {
       gameState === "playing" &&
       currentTurn === players.find((p) => p.id === socket?.id)?.id
     ) {
-      eliminateCharacter(characterId);
+      toggleEliminated(characterId);
     }
   };
 
@@ -98,13 +98,13 @@ const GamePage = () => {
   };
 
   const isMyTurn = currentTurn === players.find((p) => p.id === socket?.id)?.id;
-  
+
   // Debug turn management
   console.log("GamePage - Turn Debug:", {
     currentTurn,
     myPlayerId: players.find((p) => p.id === socket?.id)?.id,
     isMyTurn,
-    players: players.map(p => ({ id: p.id, username: p.username }))
+    players: players.map((p) => ({ id: p.id, username: p.username })),
   });
   const mySecretCharacter = characters.find(
     (c) => c.id === mySecretCharacterId

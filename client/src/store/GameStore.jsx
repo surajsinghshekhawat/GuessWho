@@ -109,7 +109,7 @@ const useGameStore = create((set, get) => ({
     socket.on("questionAnswered", (data) => {
       const { socket: currentSocket } = get();
       // Only show end turn modal to the player who asked the question
-      const shouldShowEndTurnModal = currentSocket?.id === askingPlayer;
+      const shouldShowEndTurnModal = currentSocket?.id === data.askingPlayer;
       
       set({
         waitingForAnswer: false,
@@ -117,6 +117,7 @@ const useGameStore = create((set, get) => ({
         lastQuestion: data.question,
         lastAnswer: data.answer,
         showEndTurnModal: shouldShowEndTurnModal,
+        askingPlayer: data.askingPlayer, // Store the asking player
       });
     });
 
@@ -184,10 +185,9 @@ const useGameStore = create((set, get) => ({
     }
   },
 
-  eliminateCharacter: (characterId) => {
-    const { socket, roomCode, eliminatedCharacters } = get();
-    // Only eliminate if not already eliminated (prevent unflipping)
-    if (!eliminatedCharacters.includes(characterId) && socket) {
+  toggleEliminated: (characterId) => {
+    const { socket, roomCode } = get();
+    if (socket) {
       socket.emit("eliminateCharacter", { roomCode, characterId });
     }
   },

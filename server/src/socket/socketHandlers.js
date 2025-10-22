@@ -208,6 +208,7 @@ const registerSocketHandlers = (io) => {
       io.to(roomCode).emit("questionAnswered", {
         answer,
         question: room.currentQuestion,
+        askingPlayer: room.currentTurn, // Send who asked the question
       });
 
       console.log(`Player ${socket.id} answered: ${answer}`);
@@ -229,7 +230,12 @@ const registerSocketHandlers = (io) => {
       }
 
       const playerEliminated = room.eliminatedCharacters.get(socket.id) || [];
-      if (!playerEliminated.includes(characterId)) {
+      if (playerEliminated.includes(characterId)) {
+        // Remove from eliminated list (unflip)
+        const updatedEliminated = playerEliminated.filter(id => id !== characterId);
+        room.eliminatedCharacters.set(socket.id, updatedEliminated);
+      } else {
+        // Add to eliminated list (flip)
         playerEliminated.push(characterId);
         room.eliminatedCharacters.set(socket.id, playerEliminated);
       }
@@ -279,7 +285,9 @@ const registerSocketHandlers = (io) => {
       });
 
       console.log(`Player ${socket.id} ended their turn`);
-      console.log(`Turn changed to: ${room.currentTurn}, Turn count: ${room.turnCount}`);
+      console.log(
+        `Turn changed to: ${room.currentTurn}, Turn count: ${room.turnCount}`
+      );
     });
 
     // Guess character

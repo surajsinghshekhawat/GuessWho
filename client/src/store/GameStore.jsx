@@ -63,6 +63,7 @@ const useGameStore = create((set, get) => ({
     });
 
     socket.on("roomJoined", (data) => {
+      console.log("Room joined event received:", data);
       set({
         roomCode: data.roomCode,
         players: data.players,

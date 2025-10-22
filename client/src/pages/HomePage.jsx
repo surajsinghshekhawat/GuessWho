@@ -18,7 +18,9 @@ const HomePage = () => {
   }, [isConnected, connectSocket]);
 
   useEffect(() => {
+    console.log("HomePage useEffect - roomCode:", roomCode, "isConnected:", isConnected);
     if (roomCode && isConnected) {
+      console.log("Navigating to lobby:", `/lobby/${roomCode}`);
       navigate(`/lobby/${roomCode}`);
     }
   }, [roomCode, isConnected, navigate]);

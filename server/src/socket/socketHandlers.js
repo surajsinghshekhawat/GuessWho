@@ -76,6 +76,12 @@ const registerSocketHandlers = (io) => {
         roomCode: roomCode,
       });
 
+      console.log(`Sent roomJoined event to ${socket.id} with data:`, {
+        players: room.players,
+        gameState: room.gameState,
+        roomCode: roomCode,
+      });
+
       // Notify all other players in the room about the new player
       socket.to(roomCode).emit("playerJoined", {
         players: room.players,

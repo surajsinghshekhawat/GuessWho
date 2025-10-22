@@ -8,6 +8,7 @@ import GuessModal from "../components/GuessModal";
 import QuestionAnswerModal from "../components/QuestionAnswerModal";
 import AnswerModal from "../components/AnswerModal";
 import GameOverModal from "../components/GameOverModal";
+import WrongGuessModal from "../components/WrongGuessModal";
 
 const GamePage = () => {
   const { roomCode } = useParams();
@@ -50,6 +51,8 @@ const GamePage = () => {
     endTurn,
     closeQuestionModal,
     closeAnswerModal,
+    showWrongGuessModal,
+    closeWrongGuessModal,
     resetGame,
   } = useGame();
 
@@ -250,7 +253,11 @@ const GamePage = () => {
                     <p className="text-sm text-gray-600 mt-1">
                       Answer:{" "}
                       <span className="font-medium">
-                        {lastAnswer === true ? "Yes" : lastAnswer === false ? "No" : lastAnswer}
+                        {lastAnswer === true
+                          ? "Yes"
+                          : lastAnswer === false
+                          ? "No"
+                          : lastAnswer}
                       </span>
                     </p>
                   )}
@@ -269,7 +276,9 @@ const GamePage = () => {
                     />
                     <button
                       onClick={handleAskQuestion}
-                      disabled={!myQuestion.trim() || hasAskedQuestion || hasMadeGuess}
+                      disabled={
+                        !myQuestion.trim() || hasAskedQuestion || hasMadeGuess
+                      }
                       className="w-full mt-2 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {hasAskedQuestion ? "Question Asked" : "Ask Question"}
@@ -386,6 +395,14 @@ const GamePage = () => {
         characters={characters}
         onPlayAgain={handlePlayAgain}
         onGoHome={handleGoHome}
+      />
+
+      {/* Wrong Guess Modal */}
+      <WrongGuessModal
+        isOpen={showWrongGuessModal}
+        guessedCharacter={guessedCharacter}
+        correctCharacter={correctCharacter}
+        onClose={closeWrongGuessModal}
       />
     </div>
   );

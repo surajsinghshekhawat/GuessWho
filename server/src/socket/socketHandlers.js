@@ -174,6 +174,12 @@ const registerSocketHandlers = (io) => {
         return;
       }
 
+      // Check if player has already asked a question this turn
+      if (room.waitingForAnswer) {
+        socket.emit("error", { message: "You have already asked a question this turn" });
+        return;
+      }
+
       // Store the current question
       room.currentQuestion = question;
       room.waitingForAnswer = true;
@@ -209,6 +215,7 @@ const registerSocketHandlers = (io) => {
         answer,
         question: room.currentQuestion,
         askingPlayer: room.currentTurn, // Send who asked the question
+        questionCompleted: true, // Signal that question phase is complete
       });
 
       console.log(`Player ${socket.id} answered: ${answer}`);
@@ -280,6 +287,7 @@ const registerSocketHandlers = (io) => {
       const currentIndex = players.indexOf(socket.id);
       room.currentTurn = players[(currentIndex + 1) % players.length];
       room.turnCount++;
+      room.waitingForAnswer = false; // Reset waiting for answer flag
 
       io.to(roomCode).emit("turnChanged", {
         currentTurn: room.currentTurn,
@@ -307,17 +315,23 @@ const registerSocketHandlers = (io) => {
         return;
       }
 
+      // Check if player has asked a question and is waiting for answer
+      if (room.waitingForAnswer) {
+        socket.emit("error", { message: "You have asked a question and must wait for the answer" });
+        return;
+      }
+
       const opponentId = Array.from(room.playerCharacters.keys()).find(
         (p) => p !== socket.id
       );
       const opponentCharacterId = room.playerCharacters.get(opponentId);
 
       const isCorrect = characterId === opponentCharacterId;
-      
+
       if (isCorrect) {
         // Correct guess - game over, player wins
         const winnerPlayer = room.players.find((p) => p.id === socket.id);
-        
+
         room.gameState = "finished";
 
         io.to(roomCode).emit("gameOver", {
@@ -325,14 +339,17 @@ const registerSocketHandlers = (io) => {
           winnerId: socket.id,
           isCorrect: true,
           guessedCharacter: room.characters.find((c) => c.id === characterId),
-          correctCharacter: room.characters.find((c) => c.id === opponentCharacterId),
+          correctCharacter: room.characters.find(
+            (c) => c.id === opponentCharacterId
+          ),
           mySecretCharacter: room.characters.find(
             (c) => c.id === room.playerCharacters.get(socket.id)
           ),
           opponentSecretCharacter: room.characters.find(
             (c) => c.id === room.playerCharacters.get(opponentId)
           ),
-          myEliminatedCharacters: room.eliminatedCharacters.get(socket.id) || [],
+          myEliminatedCharacters:
+            room.eliminatedCharacters.get(socket.id) || [],
           opponentEliminatedCharacters:
             room.eliminatedCharacters.get(opponentId) || [],
         });
@@ -342,6 +359,7 @@ const registerSocketHandlers = (io) => {
         const currentIndex = players.indexOf(socket.id);
         room.currentTurn = players[(currentIndex + 1) % players.length];
         room.turnCount++;
+        room.waitingForAnswer = false; // Reset waiting for answer flag
 
         io.to(roomCode).emit("turnChanged", {
           currentTurn: room.currentTurn,
@@ -350,7 +368,9 @@ const registerSocketHandlers = (io) => {
 
         io.to(roomCode).emit("wrongGuess", {
           guessedCharacter: room.characters.find((c) => c.id === characterId),
-          correctCharacter: room.characters.find((c) => c.id === opponentCharacterId),
+          correctCharacter: room.characters.find(
+            (c) => c.id === opponentCharacterId
+          ),
         });
       }
 

@@ -54,7 +54,7 @@ const SecretCharacterPanel = ({
         </div>
 
         {/* Miniature opponent grid */}
-        <div className="grid grid-cols-4 md:grid-cols-6 gap-3">
+        <div className="grid grid-cols-4 md:grid-cols-6 gap-2">
           {characters.map((character) => {
             const isEliminated = opponentEliminatedCharacters.includes(
               character.id
@@ -62,9 +62,9 @@ const SecretCharacterPanel = ({
             return (
               <div
                 key={character.id}
-                className={`relative w-full h-32 rounded-lg border-2 transition-all duration-300 ${
+                className={`relative w-full h-24 rounded-lg border-2 transition-all duration-300 ${
                   isEliminated
-                    ? "border-red-400 bg-red-100 opacity-60 transform rotate-y-180"
+                    ? "border-red-400 bg-red-100 opacity-60"
                     : "border-gray-300 bg-gray-50 hover:shadow-md"
                 }`}
               >
@@ -76,7 +76,7 @@ const SecretCharacterPanel = ({
                   />
                 ) : (
                   <div className="w-full h-full flex items-center justify-center bg-red-100 rounded-lg">
-                    <span className="text-red-500 text-2xl font-bold">✕</span>
+                    <span className="text-red-500 text-xl font-bold">✕</span>
                   </div>
                 )}
               </div>

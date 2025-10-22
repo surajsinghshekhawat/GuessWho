@@ -14,6 +14,7 @@ const LobbyPage = () => {
     selectTheme,
     gameState,
     resetGame,
+    disconnectSocket,
   } = useGame();
 
   useEffect(() => {
@@ -50,6 +51,7 @@ const LobbyPage = () => {
           <button
             onClick={() => {
               console.log("Back button clicked, navigating to home");
+              disconnectSocket(); // Disconnect socket first
               resetGame(); // Reset game state
               navigate("/");
             }}

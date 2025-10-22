@@ -3,7 +3,11 @@ import React from "react";
 const AnswerModal = ({ isOpen, question, answer, onContinue, onClose }) => {
   if (!isOpen) return null;
 
-  console.log("AnswerModal - answer value:", answer, "type:", typeof answer);
+  // Force convert to text
+  let answerText = "Unknown";
+  if (answer === true) answerText = "Yes";
+  else if (answer === false) answerText = "No";
+  else answerText = String(answer);
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -19,7 +23,7 @@ const AnswerModal = ({ isOpen, question, answer, onContinue, onClose }) => {
           <p className="text-gray-600">
             <strong>Answer:</strong>
             <span className="ml-2 px-3 py-2 rounded text-white bg-blue-500 font-bold text-lg">
-              {answer === true ? "Yes" : answer === false ? "No" : String(answer)}
+              {answerText}
             </span>
           </p>
         </div>

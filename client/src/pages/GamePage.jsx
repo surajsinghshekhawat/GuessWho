@@ -74,12 +74,10 @@ const GamePage = () => {
 
   useEffect(() => {
     if (gameState === "finished") {
-      // Game ended, show results
-      setTimeout(() => {
-        navigate("/");
-      }, 5000);
+      // Game ended, show results - no auto redirect
+      console.log("Game finished, showing results");
     }
-  }, [gameState, navigate]);
+  }, [gameState]);
 
   const handleCharacterSelect = (characterId) => {
     selectSecretCharacter(characterId);

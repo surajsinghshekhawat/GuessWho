@@ -124,7 +124,7 @@ const useGameStore = create((set, get) => ({
       const { socket: currentSocket } = get();
       // Show answer to asker, but don't show end turn modal yet
       const isAsker = currentSocket?.id === data.askingPlayer;
-      
+
       set({
         waitingForAnswer: false,
         showQuestionModal: false,
@@ -138,12 +138,14 @@ const useGameStore = create((set, get) => ({
     });
 
     socket.on("turnChanged", (data) => {
+      console.log("turnChanged event received:", data);
       set({
         currentTurn: data.currentTurn,
         turnCount: data.turnCount,
         hasAskedQuestion: false, // Reset question flag for new turn
         hasMadeGuess: false, // Reset guess flag for new turn
       });
+      console.log("turnChanged - reset hasAskedQuestion and hasMadeGuess to false");
     });
 
     socket.on("characterEliminated", (data) => {
@@ -154,6 +156,7 @@ const useGameStore = create((set, get) => ({
     });
 
     socket.on("gameOver", (data) => {
+      console.log("gameOver event received:", data);
       set({
         winner: data.winner,
         winnerId: data.winnerId,
@@ -229,9 +232,11 @@ const useGameStore = create((set, get) => ({
 
   askQuestion: (question) => {
     const { socket, roomCode } = get();
+    console.log("askQuestion called - hasAskedQuestion:", get().hasAskedQuestion, "hasMadeGuess:", get().hasMadeGuess);
     if (socket) {
       socket.emit("askQuestion", { roomCode, question });
       set({ hasAskedQuestion: true }); // Mark that question was asked
+      console.log("askQuestion - set hasAskedQuestion to true");
     }
   },
 

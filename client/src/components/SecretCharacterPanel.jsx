@@ -84,21 +84,6 @@ const SecretCharacterPanel = ({
           })}
         </div>
       </div>
-
-      {/* Guess Button */}
-      {isMyTurn && (
-        <div className="text-center">
-          <button
-            onClick={onGuessCharacter}
-            className="w-full bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 transition-colors"
-          >
-            Make a Guess
-          </button>
-          <p className="text-xs text-gray-500 mt-2">
-            Click when you think you know the answer
-          </p>
-        </div>
-      )}
     </div>
   );
 };

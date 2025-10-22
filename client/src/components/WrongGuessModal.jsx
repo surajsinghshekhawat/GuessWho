@@ -14,7 +14,7 @@ const WrongGuessModal = ({
         <h2 className="text-xl font-bold text-gray-800 mb-4 text-center">
           Wrong Guess! 😔
         </h2>
-        
+
         <div className="mb-4">
           <p className="text-gray-600 mb-2 text-center">
             You guessed: <strong>{guessedCharacter?.name}</strong>

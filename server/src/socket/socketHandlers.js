@@ -176,7 +176,9 @@ const registerSocketHandlers = (io) => {
 
       // Check if player has already asked a question this turn
       if (room.waitingForAnswer) {
-        socket.emit("error", { message: "You have already asked a question this turn" });
+        socket.emit("error", {
+          message: "You have already asked a question this turn",
+        });
         return;
       }
 
@@ -317,7 +319,9 @@ const registerSocketHandlers = (io) => {
 
       // Check if player has asked a question and is waiting for answer
       if (room.waitingForAnswer) {
-        socket.emit("error", { message: "You have asked a question and must wait for the answer" });
+        socket.emit("error", {
+          message: "You have asked a question and must wait for the answer",
+        });
         return;
       }
 
@@ -331,6 +335,7 @@ const registerSocketHandlers = (io) => {
       if (isCorrect) {
         // Correct guess - game over, player wins
         const winnerPlayer = room.players.find((p) => p.id === socket.id);
+        console.log("Game over - winnerPlayer:", winnerPlayer, "socket.id:", socket.id, "room.players:", room.players);
 
         room.gameState = "finished";
 

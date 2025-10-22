@@ -26,6 +26,14 @@ const useGameStore = create((set, get) => ({
   currentTurn: null,
   turnCount: 0,
   winner: null,
+  winnerId: null,
+  isCorrect: null,
+  guessedCharacter: null,
+  correctCharacter: null,
+  mySecretCharacter: null,
+  opponentSecretCharacter: null,
+  myEliminatedCharacters: [],
+  opponentEliminatedCharacters: [],
 
   // UI state
   isLoading: false,
@@ -140,6 +148,14 @@ const useGameStore = create((set, get) => ({
     socket.on("gameOver", (data) => {
       set({
         winner: data.winner,
+        winnerId: data.winnerId,
+        isCorrect: data.isCorrect,
+        guessedCharacter: data.guessedCharacter,
+        correctCharacter: data.correctCharacter,
+        mySecretCharacter: data.mySecretCharacter,
+        opponentSecretCharacter: data.opponentSecretCharacter,
+        myEliminatedCharacters: data.myEliminatedCharacters,
+        opponentEliminatedCharacters: data.opponentEliminatedCharacters,
         gameState: "finished",
       });
     });

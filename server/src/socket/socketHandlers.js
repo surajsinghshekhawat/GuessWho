@@ -314,16 +314,22 @@ const registerSocketHandlers = (io) => {
 
       const isCorrect = characterId === opponentCharacterId;
       const winner = isCorrect ? socket.id : opponentId;
+      const winnerPlayer = room.players.find(p => p.id === winner);
 
       room.gameState = "finished";
 
       io.to(roomCode).emit("gameOver", {
-        winner,
+        winner: winnerPlayer?.username || "Unknown",
+        winnerId: winner,
         isCorrect,
         guessedCharacter: room.characters.find((c) => c.id === characterId),
         correctCharacter: room.characters.find(
           (c) => c.id === opponentCharacterId
         ),
+        mySecretCharacter: room.characters.find((c) => c.id === room.playerCharacters.get(socket.id)),
+        opponentSecretCharacter: room.characters.find((c) => c.id === room.playerCharacters.get(opponentId)),
+        myEliminatedCharacters: room.eliminatedCharacters.get(socket.id) || [],
+        opponentEliminatedCharacters: room.eliminatedCharacters.get(opponentId) || [],
       });
 
       console.log(

@@ -1,46 +1,157 @@
 import React from "react";
 
-const GameOverModal = ({ winner, players, onPlayAgain }) => {
-  const winnerPlayer = players.find((p) => p.id === winner);
-  const isWinner =
-    winnerPlayer &&
-    winnerPlayer.socketId === players.find((p) => p.socketId).socketId;
+const GameOverModal = ({
+  isOpen,
+  winner,
+  isCorrect,
+  guessedCharacter,
+  correctCharacter,
+  mySecretCharacter,
+  opponentSecretCharacter,
+  myEliminatedCharacters,
+  opponentEliminatedCharacters,
+  characters,
+  onPlayAgain,
+  onGoHome,
+}) => {
+  if (!isOpen) return null;
+
+  const myRemainingCount = characters.length - myEliminatedCharacters.length;
+  const opponentRemainingCount = characters.length - opponentEliminatedCharacters.length;
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-xl shadow-2xl max-w-md w-full p-8 text-center">
-        <div className="text-6xl mb-4">{isWinner ? "🎉" : "😔"}</div>
+    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-lg p-8 max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold mb-4">
+            {isCorrect ? "🎉 Congratulations!" : "😔 Game Over"}
+          </h1>
+          <h2 className="text-2xl font-semibold mb-2">
+            {winner} Wins!
+          </h2>
+          <p className="text-lg text-gray-600">
+            {isCorrect 
+              ? `You correctly guessed ${correctCharacter?.name}!` 
+              : `The correct answer was ${correctCharacter?.name}`
+            }
+          </p>
+        </div>
 
-        <h2 className="text-3xl font-bold text-gray-800 mb-2">
-          {isWinner ? "Congratulations!" : "Game Over"}
-        </h2>
+        {/* Game Results */}
+        <div className="grid md:grid-cols-2 gap-8 mb-8">
+          {/* Your Board */}
+          <div className="bg-blue-50 rounded-lg p-6">
+            <h3 className="text-xl font-semibold mb-4 text-blue-800">Your Board</h3>
+            <div className="text-center mb-4">
+              <div className="text-sm text-gray-600 mb-2">Your Secret Character</div>
+              <div className="bg-white rounded-lg p-4 shadow-sm">
+                <img
+                  src={mySecretCharacter?.image}
+                  alt={mySecretCharacter?.name}
+                  className="w-20 h-20 rounded-lg mx-auto mb-2 object-cover"
+                />
+                <p className="font-medium">{mySecretCharacter?.name}</p>
+              </div>
+            </div>
+            <div className="text-center mb-4">
+              <div className="text-sm text-gray-600 mb-2">Final Board</div>
+              <div className="grid grid-cols-6 gap-1">
+                {characters.map((character) => {
+                  const isEliminated = myEliminatedCharacters.includes(character.id);
+                  return (
+                    <div
+                      key={character.id}
+                      className={`relative w-full h-12 rounded border transition-all duration-300 ${
+                        isEliminated
+                          ? "border-red-300 bg-red-100 opacity-50"
+                          : "border-gray-300 bg-gray-50"
+                      }`}
+                    >
+                      {!isEliminated ? (
+                        <img
+                          src={character.image}
+                          alt={character.name}
+                          className="w-full h-full object-cover rounded"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center">
+                          <span className="text-red-500 text-xs">✕</span>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+              <p className="text-sm text-gray-600 mt-2">
+                {myRemainingCount} characters remaining
+              </p>
+            </div>
+          </div>
 
-        <p className="text-lg text-gray-600 mb-6">
-          {isWinner
-            ? `You won! You correctly guessed ${winnerPlayer?.username}'s character!`
-            : `${winnerPlayer?.username} won! Better luck next time!`}
-        </p>
+          {/* Opponent's Board */}
+          <div className="bg-green-50 rounded-lg p-6">
+            <h3 className="text-xl font-semibold mb-4 text-green-800">Opponent's Board</h3>
+            <div className="text-center mb-4">
+              <div className="text-sm text-gray-600 mb-2">Opponent's Secret Character</div>
+              <div className="bg-white rounded-lg p-4 shadow-sm">
+                <img
+                  src={opponentSecretCharacter?.image}
+                  alt={opponentSecretCharacter?.name}
+                  className="w-20 h-20 rounded-lg mx-auto mb-2 object-cover"
+                />
+                <p className="font-medium">{opponentSecretCharacter?.name}</p>
+              </div>
+            </div>
+            <div className="text-center mb-4">
+              <div className="text-sm text-gray-600 mb-2">Final Board</div>
+              <div className="grid grid-cols-6 gap-1">
+                {characters.map((character) => {
+                  const isEliminated = opponentEliminatedCharacters.includes(character.id);
+                  return (
+                    <div
+                      key={character.id}
+                      className={`relative w-full h-12 rounded border transition-all duration-300 ${
+                        isEliminated
+                          ? "border-red-300 bg-red-100 opacity-50"
+                          : "border-gray-300 bg-gray-50"
+                      }`}
+                    >
+                      {!isEliminated ? (
+                        <img
+                          src={character.image}
+                          alt={character.name}
+                          className="w-full h-full object-cover rounded"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center">
+                          <span className="text-red-500 text-xs">✕</span>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+              <p className="text-sm text-gray-600 mt-2">
+                {opponentRemainingCount} characters remaining
+              </p>
+            </div>
+          </div>
+        </div>
 
-        <div className="space-y-3">
+        {/* Action Buttons */}
+        <div className="flex gap-4 justify-center">
           <button
             onClick={onPlayAgain}
-            className="w-full btn-primary text-lg py-3"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
           >
             Play Again
           </button>
-
           <button
-            onClick={() => (window.location.href = "/")}
-            className="w-full bg-gray-600 hover:bg-gray-700 text-white font-medium py-3 px-4 rounded-lg transition-colors duration-200"
+            onClick={onGoHome}
+            className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-3 rounded-lg font-medium transition-colors"
           >
-            Back to Home
+            Go Home
           </button>
-        </div>
-
-        <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-          <p className="text-sm text-gray-600">
-            Thanks for playing GuessWho! 🎮
-          </p>
         </div>
       </div>
     </div>
@@ -48,5 +159,3 @@ const GameOverModal = ({ winner, players, onPlayAgain }) => {
 };
 
 export default GameOverModal;
-
-

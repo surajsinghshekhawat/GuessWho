@@ -7,6 +7,7 @@ import CharacterSelectionModal from "../components/CharacterSelectionModal";
 import GuessModal from "../components/GuessModal";
 import QuestionAnswerModal from "../components/QuestionAnswerModal";
 import AnswerModal from "../components/AnswerModal";
+import GameOverModal from "../components/GameOverModal";
 
 const GamePage = () => {
   const { roomCode } = useParams();
@@ -25,6 +26,14 @@ const GamePage = () => {
     currentTurn,
     turnCount,
     winner,
+    winnerId,
+    isCorrect,
+    guessedCharacter,
+    correctCharacter,
+    mySecretCharacter,
+    opponentSecretCharacter,
+    myEliminatedCharacters,
+    opponentEliminatedCharacters,
     socket,
     showQuestionModal,
     showAnswerModal,
@@ -95,6 +104,16 @@ const GamePage = () => {
   const handleContinueFromAnswer = () => {
     closeAnswerModal();
     // End turn button is now always visible on the game screen
+  };
+
+  const handleGoHome = () => {
+    resetGame();
+    navigate("/");
+  };
+
+  const handlePlayAgain = () => {
+    resetGame();
+    // Stay on the same page, game will restart
   };
 
   const handleGuess = (characterId) => {
@@ -348,6 +367,22 @@ const GamePage = () => {
         answer={lastAnswer}
         onContinue={handleContinueFromAnswer}
         onClose={closeAnswerModal}
+      />
+
+      {/* Game Over Modal */}
+      <GameOverModal
+        isOpen={gameState === "finished"}
+        winner={winner}
+        isCorrect={isCorrect}
+        guessedCharacter={guessedCharacter}
+        correctCharacter={correctCharacter}
+        mySecretCharacter={mySecretCharacter}
+        opponentSecretCharacter={opponentSecretCharacter}
+        myEliminatedCharacters={myEliminatedCharacters}
+        opponentEliminatedCharacters={opponentEliminatedCharacters}
+        characters={characters}
+        onPlayAgain={handlePlayAgain}
+        onGoHome={handleGoHome}
       />
     </div>
   );

@@ -47,7 +47,10 @@ const LobbyPage = () => {
         {/* Back Button */}
         <div className="mb-4">
           <button
-            onClick={() => navigate("/")}
+            onClick={() => {
+              console.log("Back button clicked, navigating to home");
+              navigate("/");
+            }}
             className="flex items-center gap-2 text-blue-600 hover:text-blue-800 transition-colors"
           >
             <svg

@@ -16,12 +16,8 @@ const AnswerModal = ({ isOpen, question, answer, onContinue, onClose }) => {
           </p>
           <p className="text-gray-600">
             <strong>Answer:</strong>
-            <span
-              className={`ml-2 px-2 py-1 rounded text-white ${
-                answer === "Yes" ? "bg-green-500" : "bg-red-500"
-              }`}
-            >
-              {answer}
+            <span className="ml-2 px-2 py-1 rounded text-white bg-blue-500">
+              {answer === true ? "Yes" : answer === false ? "No" : answer}
             </span>
           </p>
         </div>

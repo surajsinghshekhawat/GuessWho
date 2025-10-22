@@ -54,7 +54,7 @@ const SecretCharacterPanel = ({
         </div>
 
         {/* Miniature opponent grid */}
-        <div className="grid grid-cols-4 gap-1">
+        <div className="grid grid-cols-6 gap-1">
           {characters.map((character) => {
             const isEliminated = opponentEliminatedCharacters.includes(
               character.id

@@ -110,12 +110,16 @@ const registerSocketHandlers = (io) => {
       room.characters = characters[theme] || [];
       room.gameState = "character-selection";
 
-      io.to(roomCode).emit("themeSelected", {
+      console.log(`Theme ${theme} selected for room ${roomCode}`);
+      console.log(`Emitting themeSelected to room ${roomCode} with data:`, {
         theme,
         characters: room.characters,
       });
 
-      console.log(`Theme ${theme} selected for room ${roomCode}`);
+      io.to(roomCode).emit("themeSelected", {
+        theme,
+        characters: room.characters,
+      });
     });
 
     // Select character

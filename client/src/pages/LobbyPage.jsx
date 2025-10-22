@@ -21,13 +21,18 @@ const LobbyPage = () => {
     }
   }, [isConnected, connectSocket]);
 
+  useEffect(() => {
+    // Navigate to game page when theme is selected (for all players)
+    console.log("LobbyPage useEffect - gameState:", gameState, "roomCode:", roomCode);
+    if (gameState === "character-selection") {
+      console.log("Navigating to game page:", `/game/${roomCode}`);
+      navigate(`/game/${roomCode}`);
+    }
+  }, [gameState, roomCode, navigate]);
+
   const handleStartGame = (themeId) => {
     if (themeId) {
       selectTheme(themeId);
-      // Navigate to game page after theme selection
-      setTimeout(() => {
-        navigate(`/game/${roomCode}`);
-      }, 1000);
     }
   };
 

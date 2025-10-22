@@ -77,6 +77,7 @@ const useGameStore = create((set, get) => ({
     });
 
     socket.on("themeSelected", (data) => {
+      console.log("Theme selected event received:", data);
       set({
         theme: data.theme,
         characters: data.characters,

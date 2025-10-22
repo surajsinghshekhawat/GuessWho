@@ -26,17 +26,55 @@ const GameOverModal = ({
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-lg p-8 max-w-4xl w-full max-h-[90vh] overflow-y-auto">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold mb-4">
+          <h1 className="text-5xl font-bold mb-4 text-gradient bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
             {isCorrect ? "🎉 Congratulations!" : "😔 Game Over"}
           </h1>
-          <h2 className="text-2xl font-semibold mb-2">
+          <h2 className="text-3xl font-semibold mb-4 text-gray-800">
             {winner || "Unknown Player"} Wins!
           </h2>
-          <p className="text-lg text-gray-600">
-            {isCorrect
-              ? `You correctly guessed ${correctCharacter?.name}!`
-              : `The correct answer was ${correctCharacter?.name}`}
-          </p>
+          <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-4 mb-6">
+            <p className="text-xl text-gray-700">
+              {isCorrect
+                ? `🎯 You correctly guessed ${correctCharacter?.name}!`
+                : `💡 The correct answer was ${correctCharacter?.name}`}
+            </p>
+          </div>
+        </div>
+
+        {/* Secret Characters Display */}
+        <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6 mb-8">
+          <h3 className="text-2xl font-bold text-center mb-6 text-gray-800">Secret Characters</h3>
+          <div className="grid md:grid-cols-2 gap-8">
+            {/* Winner's Character */}
+            <div className="text-center">
+              <h4 className="text-lg font-semibold mb-3 text-green-600">Winner's Character</h4>
+              <div className="bg-white rounded-lg p-4 shadow-lg">
+                <img
+                  src={isCorrect ? mySecretCharacter?.image : opponentSecretCharacter?.image}
+                  alt={isCorrect ? mySecretCharacter?.name : opponentSecretCharacter?.name}
+                  className="w-32 h-32 rounded-lg mx-auto mb-3 object-cover border-4 border-green-400"
+                />
+                <p className="text-lg font-semibold text-gray-800">
+                  {isCorrect ? mySecretCharacter?.name : opponentSecretCharacter?.name}
+                </p>
+              </div>
+            </div>
+            
+            {/* Loser's Character */}
+            <div className="text-center">
+              <h4 className="text-lg font-semibold mb-3 text-red-600">Opponent's Character</h4>
+              <div className="bg-white rounded-lg p-4 shadow-lg">
+                <img
+                  src={isCorrect ? opponentSecretCharacter?.image : mySecretCharacter?.image}
+                  alt={isCorrect ? opponentSecretCharacter?.name : mySecretCharacter?.name}
+                  className="w-32 h-32 rounded-lg mx-auto mb-3 object-cover border-4 border-red-400"
+                />
+                <p className="text-lg font-semibold text-gray-800">
+                  {isCorrect ? opponentSecretCharacter?.name : mySecretCharacter?.name}
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Game Results */}

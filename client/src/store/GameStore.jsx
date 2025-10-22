@@ -184,6 +184,42 @@ const useGameStore = create((set, get) => ({
       });
     });
 
+    socket.on("opponentWrongGuess", (data) => {
+      set({
+        // Could show a notification that opponent made wrong guess
+        // For now, just log it
+      });
+      console.log("Opponent made wrong guess:", data.opponentName);
+    });
+
+    socket.on("gameReset", (data) => {
+      set({
+        gameState: data.gameState,
+        characters: [],
+        mySecretCharacterId: null,
+        opponentSecretCharacterId: null,
+        mySecretCharacter: null,
+        opponentSecretCharacter: null,
+        eliminatedCharacters: [],
+        opponentEliminatedCharacters: [],
+        turnCount: 0,
+        currentTurn: null,
+        winner: null,
+        hasAskedQuestion: false,
+        hasMadeGuess: false,
+        showCharacterSelection: false,
+        showQuestionModal: false,
+        showEndTurnModal: false,
+        showAnswerModal: false,
+        showWrongGuessModal: false,
+        currentQuestion: null,
+        currentAnswer: null,
+        lastQuestion: null,
+        lastAnswer: null,
+        error: null,
+      });
+    });
+
     socket.on("error", (error) => {
       set({ error: error.message });
     });
@@ -289,6 +325,13 @@ const useGameStore = create((set, get) => ({
 
   closeEndTurnModal: () => {
     set({ showEndTurnModal: false });
+  },
+
+  playAgain: () => {
+    const { socket, roomCode } = get();
+    if (socket) {
+      socket.emit("playAgain", { roomCode });
+    }
   },
 
   resetGame: () => {

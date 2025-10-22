@@ -150,8 +150,12 @@ const registerSocketHandlers = (io) => {
           io.to(playerId).emit("characterSelected", {
             myCharacterId,
             opponentCharacterId,
-            mySecretCharacter: room.characters.find((c) => c.id === myCharacterId),
-            opponentSecretCharacter: room.characters.find((c) => c.id === opponentCharacterId),
+            mySecretCharacter: room.characters.find(
+              (c) => c.id === myCharacterId
+            ),
+            opponentSecretCharacter: room.characters.find(
+              (c) => c.id === opponentCharacterId
+            ),
             currentTurn: room.currentTurn,
             turnCount: room.turnCount,
           });
@@ -346,10 +350,15 @@ const registerSocketHandlers = (io) => {
           room.players
         );
 
+        // Ensure we have a winner name
+        const winnerName = winnerPlayer?.username || 
+                          `Player ${socket.id.slice(-4)}` || 
+                          "Unknown Player";
+
         room.gameState = "finished";
 
         io.to(roomCode).emit("gameOver", {
-          winner: winnerPlayer?.username || `Player ${socket.id.slice(-4)}`,
+          winner: winnerName,
           winnerId: socket.id,
           isCorrect: true,
           guessedCharacter: room.characters.find((c) => c.id === characterId),
@@ -380,17 +389,52 @@ const registerSocketHandlers = (io) => {
           turnCount: room.turnCount,
         });
 
-        io.to(roomCode).emit("wrongGuess", {
+        socket.emit("wrongGuess", {
           guessedCharacter: room.characters.find((c) => c.id === characterId),
           correctCharacter: room.characters.find(
             (c) => c.id === opponentCharacterId
           ),
+        });
+
+        // Notify opponent that the other player made a wrong guess
+        socket.to(roomCode).emit("opponentWrongGuess", {
+          opponentName: room.players.find((p) => p.id === socket.id)?.username || "Opponent",
         });
       }
 
       console.log(
         `Player ${socket.id} guessed character ${characterId}, correct: ${isCorrect}`
       );
+    });
+
+    // Play again - reset game state
+    socket.on("playAgain", (data) => {
+      const { roomCode } = data;
+      const room = rooms.get(roomCode);
+
+      if (!room) {
+        socket.emit("error", { message: "Room not found" });
+        return;
+      }
+
+      // Reset game state but keep players and room settings
+      room.gameState = "waiting";
+      room.characters = [];
+      room.playerCharacters.clear();
+      room.eliminatedCharacters.clear();
+      room.currentTurn = null;
+      room.turnCount = 0;
+      room.currentQuestion = null;
+      room.currentAnswer = null;
+      room.waitingForAnswer = false;
+
+      // Notify all players that game has been reset
+      io.to(roomCode).emit("gameReset", {
+        gameState: "waiting",
+        message: "Game reset! Waiting for host to select theme...",
+      });
+
+      console.log(`Player ${socket.id} requested play again for room ${roomCode}`);
     });
 
     // Handle disconnection

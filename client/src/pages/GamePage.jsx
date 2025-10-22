@@ -53,6 +53,7 @@ const GamePage = () => {
     showWrongGuessModal,
     closeWrongGuessModal,
     resetGame,
+    playAgain,
   } = useGame();
 
   const [showCharacterSelection, setShowCharacterSelection] = useState(false);
@@ -114,8 +115,8 @@ const GamePage = () => {
   };
 
   const handlePlayAgain = () => {
-    resetGame();
-    // Stay on the same page, game will restart
+    playAgain(); // Send play again request to server
+    navigate(`/lobby/${roomCode}`); // Navigate to lobby
   };
 
   const handleGuess = (characterId) => {

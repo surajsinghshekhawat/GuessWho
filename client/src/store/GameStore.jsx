@@ -111,7 +111,7 @@ const useGameStore = create((set, get) => ({
       const { socket: currentSocket } = get();
       // Show answer to asker, but don't show end turn modal yet
       const isAsker = currentSocket?.id === data.askingPlayer;
-      
+
       set({
         waitingForAnswer: false,
         showQuestionModal: false,

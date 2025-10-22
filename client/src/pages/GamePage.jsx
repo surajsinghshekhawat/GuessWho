@@ -6,7 +6,6 @@ import SecretCharacterPanel from "../components/SecretCharacterPanel";
 import CharacterSelectionModal from "../components/CharacterSelectionModal";
 import GuessModal from "../components/GuessModal";
 import QuestionAnswerModal from "../components/QuestionAnswerModal";
-import EndTurnModal from "../components/EndTurnModal";
 import AnswerModal from "../components/AnswerModal";
 
 const GamePage = () => {
@@ -28,7 +27,6 @@ const GamePage = () => {
     winner,
     socket,
     showQuestionModal,
-    showEndTurnModal,
     showAnswerModal,
     currentQuestion,
     lastQuestion,
@@ -41,8 +39,6 @@ const GamePage = () => {
     endTurn,
     closeQuestionModal,
     closeAnswerModal,
-    showEndTurnButton,
-    closeEndTurnModal,
     resetGame,
   } = useGame();
 
@@ -98,7 +94,7 @@ const GamePage = () => {
 
   const handleContinueFromAnswer = () => {
     closeAnswerModal();
-    showEndTurnButton(); // Show end turn button after continuing
+    // End turn button is now always visible on the game screen
   };
 
   const handleGuess = (characterId) => {
@@ -268,6 +264,16 @@ const GamePage = () => {
                       Make a Guess
                     </button>
                   </div>
+
+                  {/* End Turn Button */}
+                  <div className="pt-4 border-t border-gray-200">
+                    <button
+                      onClick={endTurn}
+                      className="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700"
+                    >
+                      End Turn
+                    </button>
+                  </div>
                 </div>
               ) : (
                 <div className="text-center">
@@ -342,15 +348,6 @@ const GamePage = () => {
         answer={lastAnswer}
         onContinue={handleContinueFromAnswer}
         onClose={closeAnswerModal}
-      />
-
-      {/* End Turn Modal */}
-      <EndTurnModal
-        isOpen={showEndTurnModal}
-        onEndTurn={endTurn}
-        onClose={closeEndTurnModal}
-        lastQuestion={lastQuestion}
-        lastAnswer={lastAnswer}
       />
     </div>
   );

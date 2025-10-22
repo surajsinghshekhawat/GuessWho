@@ -150,6 +150,8 @@ const registerSocketHandlers = (io) => {
           io.to(playerId).emit("characterSelected", {
             myCharacterId,
             opponentCharacterId,
+            mySecretCharacter: room.characters.find((c) => c.id === myCharacterId),
+            opponentSecretCharacter: room.characters.find((c) => c.id === opponentCharacterId),
             currentTurn: room.currentTurn,
             turnCount: room.turnCount,
           });
@@ -347,7 +349,7 @@ const registerSocketHandlers = (io) => {
         room.gameState = "finished";
 
         io.to(roomCode).emit("gameOver", {
-          winner: winnerPlayer?.username || "Unknown",
+          winner: winnerPlayer?.username || `Player ${socket.id.slice(-4)}`,
           winnerId: socket.id,
           isCorrect: true,
           guessedCharacter: room.characters.find((c) => c.id === characterId),

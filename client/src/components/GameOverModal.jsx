@@ -16,6 +16,8 @@ const GameOverModal = ({
 }) => {
   if (!isOpen) return null;
 
+  console.log("GameOverModal - winner:", winner, "isCorrect:", isCorrect);
+
   const myRemainingCount = characters.length - myEliminatedCharacters.length;
   const opponentRemainingCount =
     characters.length - opponentEliminatedCharacters.length;

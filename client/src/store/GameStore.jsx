@@ -104,6 +104,8 @@ const useGameStore = create((set, get) => ({
       set({
         mySecretCharacterId: data.myCharacterId,
         opponentSecretCharacterId: data.opponentCharacterId,
+        mySecretCharacter: data.mySecretCharacter,
+        opponentSecretCharacter: data.opponentSecretCharacter,
         gameState: "playing",
         showCharacterSelection: false,
         currentTurn: data.currentTurn,

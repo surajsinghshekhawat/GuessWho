@@ -20,31 +20,20 @@ const WrongGuessModal = ({
             You guessed: <strong>{guessedCharacter?.name}</strong>
           </p>
           <p className="text-gray-600 text-center">
-            The correct answer was: <strong>{correctCharacter?.name}</strong>
+            That's not correct. Better luck next time!
           </p>
         </div>
 
-        <div className="flex gap-4 mb-4">
-          <div className="flex-1 text-center">
+        <div className="mb-4">
+          <div className="text-center">
             <div className="text-sm text-gray-600 mb-2">Your Guess</div>
-            <div className="bg-red-50 rounded-lg p-3">
+            <div className="bg-red-50 rounded-lg p-3 inline-block">
               <img
                 src={guessedCharacter?.image}
                 alt={guessedCharacter?.name}
                 className="w-16 h-16 rounded-lg mx-auto mb-2 object-cover"
               />
               <p className="text-sm font-medium">{guessedCharacter?.name}</p>
-            </div>
-          </div>
-          <div className="flex-1 text-center">
-            <div className="text-sm text-gray-600 mb-2">Correct Answer</div>
-            <div className="bg-green-50 rounded-lg p-3">
-              <img
-                src={correctCharacter?.image}
-                alt={correctCharacter?.name}
-                className="w-16 h-16 rounded-lg mx-auto mb-2 object-cover"
-              />
-              <p className="text-sm font-medium">{correctCharacter?.name}</p>
             </div>
           </div>
         </div>

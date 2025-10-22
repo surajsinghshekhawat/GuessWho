@@ -17,7 +17,8 @@ const GameOverModal = ({
   if (!isOpen) return null;
 
   const myRemainingCount = characters.length - myEliminatedCharacters.length;
-  const opponentRemainingCount = characters.length - opponentEliminatedCharacters.length;
+  const opponentRemainingCount =
+    characters.length - opponentEliminatedCharacters.length;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
@@ -26,14 +27,11 @@ const GameOverModal = ({
           <h1 className="text-4xl font-bold mb-4">
             {isCorrect ? "🎉 Congratulations!" : "😔 Game Over"}
           </h1>
-          <h2 className="text-2xl font-semibold mb-2">
-            {winner} Wins!
-          </h2>
+          <h2 className="text-2xl font-semibold mb-2">{winner} Wins!</h2>
           <p className="text-lg text-gray-600">
-            {isCorrect 
-              ? `You correctly guessed ${correctCharacter?.name}!` 
-              : `The correct answer was ${correctCharacter?.name}`
-            }
+            {isCorrect
+              ? `You correctly guessed ${correctCharacter?.name}!`
+              : `The correct answer was ${correctCharacter?.name}`}
           </p>
         </div>
 
@@ -41,9 +39,13 @@ const GameOverModal = ({
         <div className="grid md:grid-cols-2 gap-8 mb-8">
           {/* Your Board */}
           <div className="bg-blue-50 rounded-lg p-6">
-            <h3 className="text-xl font-semibold mb-4 text-blue-800">Your Board</h3>
+            <h3 className="text-xl font-semibold mb-4 text-blue-800">
+              Your Board
+            </h3>
             <div className="text-center mb-4">
-              <div className="text-sm text-gray-600 mb-2">Your Secret Character</div>
+              <div className="text-sm text-gray-600 mb-2">
+                Your Secret Character
+              </div>
               <div className="bg-white rounded-lg p-4 shadow-sm">
                 <img
                   src={mySecretCharacter?.image}
@@ -57,7 +59,9 @@ const GameOverModal = ({
               <div className="text-sm text-gray-600 mb-2">Final Board</div>
               <div className="grid grid-cols-6 gap-1">
                 {characters.map((character) => {
-                  const isEliminated = myEliminatedCharacters.includes(character.id);
+                  const isEliminated = myEliminatedCharacters.includes(
+                    character.id
+                  );
                   return (
                     <div
                       key={character.id}
@@ -90,9 +94,13 @@ const GameOverModal = ({
 
           {/* Opponent's Board */}
           <div className="bg-green-50 rounded-lg p-6">
-            <h3 className="text-xl font-semibold mb-4 text-green-800">Opponent's Board</h3>
+            <h3 className="text-xl font-semibold mb-4 text-green-800">
+              Opponent's Board
+            </h3>
             <div className="text-center mb-4">
-              <div className="text-sm text-gray-600 mb-2">Opponent's Secret Character</div>
+              <div className="text-sm text-gray-600 mb-2">
+                Opponent's Secret Character
+              </div>
               <div className="bg-white rounded-lg p-4 shadow-sm">
                 <img
                   src={opponentSecretCharacter?.image}
@@ -106,7 +114,9 @@ const GameOverModal = ({
               <div className="text-sm text-gray-600 mb-2">Final Board</div>
               <div className="grid grid-cols-6 gap-1">
                 {characters.map((character) => {
-                  const isEliminated = opponentEliminatedCharacters.includes(character.id);
+                  const isEliminated = opponentEliminatedCharacters.includes(
+                    character.id
+                  );
                   return (
                     <div
                       key={character.id}

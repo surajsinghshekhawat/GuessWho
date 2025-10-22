@@ -313,24 +313,46 @@ const registerSocketHandlers = (io) => {
       const opponentCharacterId = room.playerCharacters.get(opponentId);
 
       const isCorrect = characterId === opponentCharacterId;
-      const winner = isCorrect ? socket.id : opponentId;
-      const winnerPlayer = room.players.find(p => p.id === winner);
+      
+      if (isCorrect) {
+        // Correct guess - game over, player wins
+        const winnerPlayer = room.players.find((p) => p.id === socket.id);
+        
+        room.gameState = "finished";
 
-      room.gameState = "finished";
+        io.to(roomCode).emit("gameOver", {
+          winner: winnerPlayer?.username || "Unknown",
+          winnerId: socket.id,
+          isCorrect: true,
+          guessedCharacter: room.characters.find((c) => c.id === characterId),
+          correctCharacter: room.characters.find((c) => c.id === opponentCharacterId),
+          mySecretCharacter: room.characters.find(
+            (c) => c.id === room.playerCharacters.get(socket.id)
+          ),
+          opponentSecretCharacter: room.characters.find(
+            (c) => c.id === room.playerCharacters.get(opponentId)
+          ),
+          myEliminatedCharacters: room.eliminatedCharacters.get(socket.id) || [],
+          opponentEliminatedCharacters:
+            room.eliminatedCharacters.get(opponentId) || [],
+        });
+      } else {
+        // Wrong guess - end turn automatically
+        const players = Array.from(room.playerCharacters.keys());
+        const currentIndex = players.indexOf(socket.id);
+        room.currentTurn = players[(currentIndex + 1) % players.length];
+        room.turnCount++;
 
-      io.to(roomCode).emit("gameOver", {
-        winner: winnerPlayer?.username || "Unknown",
-        winnerId: winner,
-        isCorrect,
-        guessedCharacter: room.characters.find((c) => c.id === characterId),
-        correctCharacter: room.characters.find(
-          (c) => c.id === opponentCharacterId
-        ),
-        mySecretCharacter: room.characters.find((c) => c.id === room.playerCharacters.get(socket.id)),
-        opponentSecretCharacter: room.characters.find((c) => c.id === room.playerCharacters.get(opponentId)),
-        myEliminatedCharacters: room.eliminatedCharacters.get(socket.id) || [],
-        opponentEliminatedCharacters: room.eliminatedCharacters.get(opponentId) || [],
-      });
+        io.to(roomCode).emit("turnChanged", {
+          currentTurn: room.currentTurn,
+          turnCount: room.turnCount,
+        });
+
+        io.to(roomCode).emit("wrongGuess", {
+          guessedCharacter: room.characters.find((c) => c.id === characterId),
+          correctCharacter: room.characters.find((c) => c.id === opponentCharacterId),
+        });
+      }
 
       console.log(
         `Player ${socket.id} guessed character ${characterId}, correct: ${isCorrect}`

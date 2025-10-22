@@ -34,6 +34,8 @@ const GamePage = () => {
     opponentSecretCharacter,
     myEliminatedCharacters,
     opponentEliminatedCharacters,
+    hasAskedQuestion,
+    hasMadeGuess,
     socket,
     showQuestionModal,
     showAnswerModal,
@@ -248,7 +250,7 @@ const GamePage = () => {
                     <p className="text-sm text-gray-600 mt-1">
                       Answer:{" "}
                       <span className="font-medium">
-                        {lastAnswer ? "Yes" : "No"}
+                        {lastAnswer === true ? "Yes" : lastAnswer === false ? "No" : lastAnswer}
                       </span>
                     </p>
                   )}
@@ -267,10 +269,10 @@ const GamePage = () => {
                     />
                     <button
                       onClick={handleAskQuestion}
-                      disabled={!myQuestion.trim()}
+                      disabled={!myQuestion.trim() || hasAskedQuestion || hasMadeGuess}
                       className="w-full mt-2 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      Ask Question
+                      {hasAskedQuestion ? "Question Asked" : "Ask Question"}
                     </button>
                   </div>
 
@@ -278,9 +280,10 @@ const GamePage = () => {
                     <p className="text-gray-600 mb-2">Or</p>
                     <button
                       onClick={() => setShowGuessModal(true)}
-                      className="w-full bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700"
+                      disabled={hasAskedQuestion || hasMadeGuess}
+                      className="w-full bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      Make a Guess
+                      {hasMadeGuess ? "Guess Made" : "Make a Guess"}
                     </button>
                   </div>
 

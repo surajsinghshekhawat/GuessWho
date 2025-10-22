@@ -34,6 +34,10 @@ const useGameStore = create((set, get) => ({
   opponentSecretCharacter: null,
   myEliminatedCharacters: [],
   opponentEliminatedCharacters: [],
+  
+  // Turn state
+  hasAskedQuestion: false,
+  hasMadeGuess: false,
 
   // UI state
   isLoading: false,
@@ -135,6 +139,8 @@ const useGameStore = create((set, get) => ({
       set({
         currentTurn: data.currentTurn,
         turnCount: data.turnCount,
+        hasAskedQuestion: false, // Reset question flag for new turn
+        hasMadeGuess: false, // Reset guess flag for new turn
       });
     });
 
@@ -157,6 +163,13 @@ const useGameStore = create((set, get) => ({
         myEliminatedCharacters: data.myEliminatedCharacters,
         opponentEliminatedCharacters: data.opponentEliminatedCharacters,
         gameState: "finished",
+      });
+    });
+
+    socket.on("wrongGuess", (data) => {
+      set({
+        hasMadeGuess: false, // Reset guess flag since turn ended
+        // Could show a notification about wrong guess
       });
     });
 
@@ -214,6 +227,7 @@ const useGameStore = create((set, get) => ({
     const { socket, roomCode } = get();
     if (socket) {
       socket.emit("askQuestion", { roomCode, question });
+      set({ hasAskedQuestion: true }); // Mark that question was asked
     }
   },
 
@@ -228,6 +242,7 @@ const useGameStore = create((set, get) => ({
     const { socket, roomCode } = get();
     if (socket) {
       socket.emit("guessCharacter", { roomCode, characterId });
+      set({ hasMadeGuess: true }); // Mark that guess was made
     }
   },
 
@@ -269,6 +284,8 @@ const useGameStore = create((set, get) => ({
       turnCount: 0,
       currentTurn: null,
       winner: null,
+      hasAskedQuestion: false,
+      hasMadeGuess: false,
       showCharacterSelection: false,
       showQuestionModal: false,
       showEndTurnModal: false,

@@ -1,0 +1,28 @@
+{
+  "name": "guesswho-game",
+  "version": "1.0.0",
+  "description": "Multiplayer Guess Who web game",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:client\" \"npm run dev:server\"",
+    "dev:client": "cd client && npm run dev",
+    "dev:server": "cd server && npm run dev",
+    "build": "cd client && npm run build",
+    "start": "cd server && npm start",
+    "install:all": "npm install && cd client && npm install && cd ../server && npm install"
+  },
+  "keywords": [
+    "game",
+    "multiplayer",
+    "socket.io",
+    "react",
+    "node"
+  ],
+  "author": "Suraj",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
+
+

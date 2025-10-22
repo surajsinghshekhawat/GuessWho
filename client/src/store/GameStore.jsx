@@ -64,6 +64,7 @@ const useGameStore = create((set, get) => ({
 
     socket.on("roomJoined", (data) => {
       set({
+        roomCode: data.roomCode,
         players: data.players,
         isHost: false,
         gameState: data.gameState || "waiting",

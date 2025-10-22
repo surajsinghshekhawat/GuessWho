@@ -34,6 +34,7 @@ const useGameStore = create((set, get) => ({
   waitingForAnswer: false,
   showQuestionModal: false,
   showEndTurnModal: false,
+  showAnswerModal: false,
   currentQuestion: null,
   currentAnswer: null,
   lastQuestion: null,
@@ -108,16 +109,17 @@ const useGameStore = create((set, get) => ({
 
     socket.on("questionAnswered", (data) => {
       const { socket: currentSocket } = get();
-      // Only show end turn modal to the player who asked the question
-      const shouldShowEndTurnModal = currentSocket?.id === data.askingPlayer;
+      // Show answer to asker, but don't show end turn modal yet
+      const isAsker = currentSocket?.id === data.askingPlayer;
       
       set({
         waitingForAnswer: false,
         showQuestionModal: false,
         lastQuestion: data.question,
         lastAnswer: data.answer,
-        showEndTurnModal: shouldShowEndTurnModal,
-        askingPlayer: data.askingPlayer, // Store the asking player
+        showEndTurnModal: false, // Don't show end turn modal immediately
+        askingPlayer: data.askingPlayer,
+        showAnswerModal: isAsker, // Show answer modal to asker
       });
     });
 
@@ -224,6 +226,14 @@ const useGameStore = create((set, get) => ({
     set({ showQuestionModal: false });
   },
 
+  closeAnswerModal: () => {
+    set({ showAnswerModal: false });
+  },
+
+  showEndTurnButton: () => {
+    set({ showEndTurnModal: true });
+  },
+
   closeEndTurnModal: () => {
     set({ showEndTurnModal: false });
   },
@@ -246,6 +256,7 @@ const useGameStore = create((set, get) => ({
       showCharacterSelection: false,
       showQuestionModal: false,
       showEndTurnModal: false,
+      showAnswerModal: false,
       currentQuestion: null,
       currentAnswer: null,
       lastQuestion: null,

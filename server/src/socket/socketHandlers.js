@@ -232,7 +232,9 @@ const registerSocketHandlers = (io) => {
       const playerEliminated = room.eliminatedCharacters.get(socket.id) || [];
       if (playerEliminated.includes(characterId)) {
         // Remove from eliminated list (unflip)
-        const updatedEliminated = playerEliminated.filter(id => id !== characterId);
+        const updatedEliminated = playerEliminated.filter(
+          (id) => id !== characterId
+        );
         room.eliminatedCharacters.set(socket.id, updatedEliminated);
       } else {
         // Add to eliminated list (flip)

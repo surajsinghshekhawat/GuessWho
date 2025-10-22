@@ -7,6 +7,7 @@ import CharacterSelectionModal from "../components/CharacterSelectionModal";
 import GuessModal from "../components/GuessModal";
 import QuestionAnswerModal from "../components/QuestionAnswerModal";
 import EndTurnModal from "../components/EndTurnModal";
+import AnswerModal from "../components/AnswerModal";
 
 const GamePage = () => {
   const { roomCode } = useParams();
@@ -28,6 +29,7 @@ const GamePage = () => {
     socket,
     showQuestionModal,
     showEndTurnModal,
+    showAnswerModal,
     currentQuestion,
     lastQuestion,
     lastAnswer,
@@ -38,6 +40,8 @@ const GamePage = () => {
     answerQuestion,
     endTurn,
     closeQuestionModal,
+    closeAnswerModal,
+    showEndTurnButton,
     closeEndTurnModal,
     resetGame,
   } = useGame();
@@ -90,6 +94,11 @@ const GamePage = () => {
 
   const handleAnswerQuestion = (answer) => {
     answerQuestion(answer);
+  };
+
+  const handleContinueFromAnswer = () => {
+    closeAnswerModal();
+    showEndTurnButton(); // Show end turn button after continuing
   };
 
   const handleGuess = (characterId) => {
@@ -324,6 +333,15 @@ const GamePage = () => {
         onAnswer={handleAnswerQuestion}
         onClose={closeQuestionModal}
         isMyTurn={isMyTurn}
+      />
+
+      {/* Answer Modal */}
+      <AnswerModal
+        isOpen={showAnswerModal}
+        question={lastQuestion}
+        answer={lastAnswer}
+        onContinue={handleContinueFromAnswer}
+        onClose={closeAnswerModal}
       />
 
       {/* End Turn Modal */}

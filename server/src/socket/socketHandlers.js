@@ -178,7 +178,8 @@ const registerSocketHandlers = (io) => {
       room.currentQuestion = question;
       room.waitingForAnswer = true;
 
-      io.to(roomCode).emit("questionAsked", {
+      // Only send question to the opponent (not the asker)
+      socket.to(roomCode).emit("questionAsked", {
         question,
         askingPlayer: socket.id,
       });
@@ -278,6 +279,7 @@ const registerSocketHandlers = (io) => {
       });
 
       console.log(`Player ${socket.id} ended their turn`);
+      console.log(`Turn changed to: ${room.currentTurn}, Turn count: ${room.turnCount}`);
     });
 
     // Guess character

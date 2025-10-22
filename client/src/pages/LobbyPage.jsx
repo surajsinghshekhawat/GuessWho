@@ -23,7 +23,12 @@ const LobbyPage = () => {
 
   useEffect(() => {
     // Navigate to game page when theme is selected (for all players)
-    console.log("LobbyPage useEffect - gameState:", gameState, "roomCode:", roomCode);
+    console.log(
+      "LobbyPage useEffect - gameState:",
+      gameState,
+      "roomCode:",
+      roomCode
+    );
     if (gameState === "character-selection") {
       console.log("Navigating to game page:", `/game/${roomCode}`);
       navigate(`/game/${roomCode}`);
@@ -39,6 +44,19 @@ const LobbyPage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 p-4">
       <div className="max-w-4xl mx-auto">
+        {/* Back Button */}
+        <div className="mb-4">
+          <button
+            onClick={() => navigate("/")}
+            className="flex items-center gap-2 text-blue-600 hover:text-blue-800 transition-colors"
+          >
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+            </svg>
+            Back to Home
+          </button>
+        </div>
+
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-blue-800 mb-2">
             Room: {roomCode}

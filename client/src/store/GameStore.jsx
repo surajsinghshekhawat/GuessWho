@@ -145,7 +145,9 @@ const useGameStore = create((set, get) => ({
         hasAskedQuestion: false, // Reset question flag for new turn
         hasMadeGuess: false, // Reset guess flag for new turn
       });
-      console.log("turnChanged - reset hasAskedQuestion and hasMadeGuess to false");
+      console.log(
+        "turnChanged - reset hasAskedQuestion and hasMadeGuess to false"
+      );
     });
 
     socket.on("characterEliminated", (data) => {
@@ -232,7 +234,12 @@ const useGameStore = create((set, get) => ({
 
   askQuestion: (question) => {
     const { socket, roomCode } = get();
-    console.log("askQuestion called - hasAskedQuestion:", get().hasAskedQuestion, "hasMadeGuess:", get().hasMadeGuess);
+    console.log(
+      "askQuestion called - hasAskedQuestion:",
+      get().hasAskedQuestion,
+      "hasMadeGuess:",
+      get().hasMadeGuess
+    );
     if (socket) {
       socket.emit("askQuestion", { roomCode, question });
       set({ hasAskedQuestion: true }); // Mark that question was asked

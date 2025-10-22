@@ -34,7 +34,6 @@ const GamePage = () => {
     mySecretCharacter,
     opponentSecretCharacter,
     myEliminatedCharacters,
-    opponentEliminatedCharacters,
     hasAskedQuestion,
     hasMadeGuess,
     socket,
@@ -133,12 +132,6 @@ const GamePage = () => {
     isMyTurn,
     players: players.map((p) => ({ id: p.id, username: p.username })),
   });
-  const mySecretCharacter = characters.find(
-    (c) => c.id === mySecretCharacterId
-  );
-  const opponentSecretCharacter = characters.find(
-    (c) => c.id === opponentSecretCharacterId
-  );
 
   if (gameState === "waiting" || gameState === "theme-selection") {
     return (

@@ -335,7 +335,14 @@ const registerSocketHandlers = (io) => {
       if (isCorrect) {
         // Correct guess - game over, player wins
         const winnerPlayer = room.players.find((p) => p.id === socket.id);
-        console.log("Game over - winnerPlayer:", winnerPlayer, "socket.id:", socket.id, "room.players:", room.players);
+        console.log(
+          "Game over - winnerPlayer:",
+          winnerPlayer,
+          "socket.id:",
+          socket.id,
+          "room.players:",
+          room.players
+        );
 
         room.gameState = "finished";
 

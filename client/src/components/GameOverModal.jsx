@@ -16,7 +16,7 @@ const GameOverModal = ({
 }) => {
   if (!isOpen) return null;
 
-  console.log("GameOverModal - winner:", winner, "isCorrect:", isCorrect);
+  console.log("GameOverModal - winner:", winner, "isCorrect:", isCorrect, "all props:", { winner, isCorrect, guessedCharacter, correctCharacter, mySecretCharacter, opponentSecretCharacter });
 
   const myRemainingCount = characters.length - myEliminatedCharacters.length;
   const opponentRemainingCount =
@@ -43,34 +43,60 @@ const GameOverModal = ({
 
         {/* Secret Characters Display */}
         <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6 mb-8">
-          <h3 className="text-2xl font-bold text-center mb-6 text-gray-800">Secret Characters</h3>
+          <h3 className="text-2xl font-bold text-center mb-6 text-gray-800">
+            Secret Characters
+          </h3>
           <div className="grid md:grid-cols-2 gap-8">
             {/* Winner's Character */}
             <div className="text-center">
-              <h4 className="text-lg font-semibold mb-3 text-green-600">Winner's Character</h4>
+              <h4 className="text-lg font-semibold mb-3 text-green-600">
+                Winner's Character
+              </h4>
               <div className="bg-white rounded-lg p-4 shadow-lg">
                 <img
-                  src={isCorrect ? mySecretCharacter?.image : opponentSecretCharacter?.image}
-                  alt={isCorrect ? mySecretCharacter?.name : opponentSecretCharacter?.name}
+                  src={
+                    isCorrect
+                      ? mySecretCharacter?.image
+                      : opponentSecretCharacter?.image
+                  }
+                  alt={
+                    isCorrect
+                      ? mySecretCharacter?.name
+                      : opponentSecretCharacter?.name
+                  }
                   className="w-32 h-32 rounded-lg mx-auto mb-3 object-cover border-4 border-green-400"
                 />
                 <p className="text-lg font-semibold text-gray-800">
-                  {isCorrect ? mySecretCharacter?.name : opponentSecretCharacter?.name}
+                  {isCorrect
+                    ? mySecretCharacter?.name
+                    : opponentSecretCharacter?.name}
                 </p>
               </div>
             </div>
-            
+
             {/* Loser's Character */}
             <div className="text-center">
-              <h4 className="text-lg font-semibold mb-3 text-red-600">Opponent's Character</h4>
+              <h4 className="text-lg font-semibold mb-3 text-red-600">
+                Opponent's Character
+              </h4>
               <div className="bg-white rounded-lg p-4 shadow-lg">
                 <img
-                  src={isCorrect ? opponentSecretCharacter?.image : mySecretCharacter?.image}
-                  alt={isCorrect ? opponentSecretCharacter?.name : mySecretCharacter?.name}
+                  src={
+                    isCorrect
+                      ? opponentSecretCharacter?.image
+                      : mySecretCharacter?.image
+                  }
+                  alt={
+                    isCorrect
+                      ? opponentSecretCharacter?.name
+                      : mySecretCharacter?.name
+                  }
                   className="w-32 h-32 rounded-lg mx-auto mb-3 object-cover border-4 border-red-400"
                 />
                 <p className="text-lg font-semibold text-gray-800">
-                  {isCorrect ? opponentSecretCharacter?.name : mySecretCharacter?.name}
+                  {isCorrect
+                    ? opponentSecretCharacter?.name
+                    : mySecretCharacter?.name}
                 </p>
               </div>
             </div>

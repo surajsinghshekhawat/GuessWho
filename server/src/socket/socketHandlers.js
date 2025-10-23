@@ -351,13 +351,16 @@ const registerSocketHandlers = (io) => {
         );
 
         // Ensure we have a winner name
-        const winnerName = winnerPlayer?.username || 
-                          `Player ${socket.id.slice(-4)}` || 
-                          "Unknown Player";
+        const winnerName =
+          winnerPlayer?.username ||
+          `Player ${socket.id.slice(-4)}` ||
+          "Unknown Player";
+
+        console.log("gameOver - winnerName:", winnerName, "winnerPlayer:", winnerPlayer);
 
         room.gameState = "finished";
 
-        io.to(roomCode).emit("gameOver", {
+        const gameOverData = {
           winner: winnerName,
           winnerId: socket.id,
           isCorrect: true,
@@ -375,7 +378,11 @@ const registerSocketHandlers = (io) => {
             room.eliminatedCharacters.get(socket.id) || [],
           opponentEliminatedCharacters:
             room.eliminatedCharacters.get(opponentId) || [],
-        });
+        };
+
+        console.log("gameOver - sending data:", gameOverData);
+
+        io.to(roomCode).emit("gameOver", gameOverData);
       } else {
         // Wrong guess - end turn automatically
         const players = Array.from(room.playerCharacters.keys());
@@ -398,7 +405,9 @@ const registerSocketHandlers = (io) => {
 
         // Notify opponent that the other player made a wrong guess
         socket.to(roomCode).emit("opponentWrongGuess", {
-          opponentName: room.players.find((p) => p.id === socket.id)?.username || "Opponent",
+          opponentName:
+            room.players.find((p) => p.id === socket.id)?.username ||
+            "Opponent",
         });
       }
 
@@ -434,7 +443,9 @@ const registerSocketHandlers = (io) => {
         message: "Game reset! Waiting for host to select theme...",
       });
 
-      console.log(`Player ${socket.id} requested play again for room ${roomCode}`);
+      console.log(
+        `Player ${socket.id} requested play again for room ${roomCode}`
+      );
     });
 
     // Handle disconnection

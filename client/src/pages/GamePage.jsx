@@ -74,7 +74,6 @@ const GamePage = () => {
   useEffect(() => {
     console.log("GamePage useEffect - gameState:", gameState, "roomCode:", roomCode);
     if (gameState === "finished") {
-      // Navigate to winner page
       console.log("Game finished, navigating to winner page");
       navigate(`/winner/${roomCode}`);
     }
@@ -107,7 +106,6 @@ const GamePage = () => {
 
   const handleContinueFromAnswer = () => {
     closeAnswerModal();
-    // End turn button is now always visible on the game screen
   };
 
   const handleGoHome = () => {
@@ -116,8 +114,8 @@ const GamePage = () => {
   };
 
   const handlePlayAgain = () => {
-    playAgain(); // Send play again request to server
-    navigate(`/lobby/${roomCode}`); // Navigate to lobby
+    playAgain();
+    navigate(`/lobby/${roomCode}`);
   };
 
   const handleGuess = (characterId) => {
@@ -127,7 +125,6 @@ const GamePage = () => {
 
   const isMyTurn = currentTurn === players.find((p) => p.id === socket?.id)?.id;
 
-  // Debug turn management
   console.log("GamePage - Turn Debug:", {
     currentTurn,
     myPlayerId: players.find((p) => p.id === socket?.id)?.id,
@@ -137,224 +134,197 @@ const GamePage = () => {
 
   if (gameState === "waiting" || gameState === "theme-selection") {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 p-4">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-2xl font-bold text-blue-800 mb-4">
-            Room: {roomCode}
-          </h1>
-          <p className="text-gray-600">Waiting for game to start...</p>
+      <div className="min-h-screen bg-gradient-to-br from-red-500 to-blue-600 flex items-center justify-center p-4">
+        <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full text-center">
+          <div className="text-6xl mb-4">🎮</div>
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">
+            Waiting for Game to Start
+          </h2>
+          <p className="text-gray-600 mb-6">
+            The host needs to select a theme to begin the game
+          </p>
           <button
-            onClick={() => navigate("/")}
-            className="mt-4 bg-blue-600 text-white py-2 px-6 rounded-lg hover:bg-blue-700"
+            onClick={handleGoHome}
+            className="bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-200"
           >
-            Back to Home
+            Go Home
           </button>
         </div>
       </div>
     );
   }
 
+  if (gameState === "character-selection") {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-red-500 to-blue-600 flex items-center justify-center p-4">
+        <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full text-center">
+          <div className="text-6xl mb-4">👤</div>
+          <h2 className="text-2xl font-bold text-gray-800 mb-4">
+            Selecting Characters
+          </h2>
+          <p className="text-gray-600 mb-6">
+            Players are choosing their secret characters
+          </p>
+          <div className="space-y-2">
+            {players.map((player) => (
+              <div key={player.id} className="flex items-center justify-center space-x-2">
+                <div className={`w-3 h-3 rounded-full ${player.id === socket?.id ? 'bg-green-500' : 'bg-yellow-500'}`}></div>
+                <span className="text-gray-700">
+                  {player.username} {player.id === socket?.id ? '(You)' : ''}
+                </span>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 p-4">
+    <div className="min-h-screen bg-gradient-to-br from-red-500 to-blue-600 p-4">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="bg-white rounded-lg shadow-lg p-4 mb-6">
-          <div className="flex justify-between items-center">
+        <div className="bg-white rounded-2xl shadow-2xl p-6 mb-6">
+          <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <button
-                onClick={() => navigate("/")}
-                className="bg-gray-500 text-white py-2 px-4 rounded-lg hover:bg-gray-600 transition-colors"
-              >
-                ← Home
-              </button>
+              <div className="bg-gradient-to-r from-red-500 to-blue-600 rounded-full p-3">
+                <span className="text-white text-xl font-bold">?</span>
+              </div>
               <div>
-                <h1 className="text-2xl font-bold text-blue-800">
-                  Room: {roomCode}
-                </h1>
-                <p className="text-gray-600">Theme: {theme}</p>
+                <h1 className="text-2xl font-bold text-gray-800">Guess Who</h1>
+                <p className="text-gray-600">Room: {roomCode}</p>
               </div>
             </div>
-            <div className="text-right">
-              <p className="text-sm text-gray-600">Turn: {turnCount}</p>
-              <p className="text-sm font-medium">
-                {isMyTurn ? "Your turn" : "Opponent's turn"}
-              </p>
+            
+            <div className="flex items-center space-x-4">
+              {/* Turn Indicator */}
+              <div className={`px-4 py-2 rounded-lg font-semibold ${
+                isMyTurn 
+                  ? 'bg-gradient-to-r from-green-500 to-green-600 text-white' 
+                  : 'bg-gray-200 text-gray-600'
+              }`}>
+                {isMyTurn ? 'Your Turn' : 'Opponent\'s Turn'}
+              </div>
+              
+              {/* Turn Counter */}
+              <div className="bg-gray-100 px-4 py-2 rounded-lg">
+                <span className="text-gray-700 font-semibold">Turn {turnCount + 1}</span>
+              </div>
             </div>
           </div>
         </div>
 
+        {/* Main Game Area */}
         <div className="grid lg:grid-cols-3 gap-6">
-          {/* Main Game Board */}
+          {/* Game Board */}
           <div className="lg:col-span-2">
             <GameBoard
               characters={characters}
-              eliminatedCharacters={eliminatedCharacters}
+              eliminatedCharacters={myEliminatedCharacters}
               onCharacterClick={handleCharacterClick}
               isMyTurn={isMyTurn}
-              currentTurn={currentTurn}
             />
           </div>
 
           {/* Right Panel */}
-          <div className="space-y-6">
-            {/* Secret Character Panel */}
+          <div className="lg:col-span-1">
             <SecretCharacterPanel
               mySecretCharacter={mySecretCharacter}
-              opponentSecretCharacter={opponentSecretCharacter}
               opponentEliminatedCharacters={opponentEliminatedCharacters}
               characters={characters}
-              onGuessCharacter={() => setShowGuessModal(true)}
+              onMakeGuess={() => setShowGuessModal(true)}
               isMyTurn={isMyTurn}
+              hasAskedQuestion={hasAskedQuestion}
+              hasMadeGuess={hasMadeGuess}
             />
-
-            {/* Question Panel */}
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <h2 className="text-xl font-semibold mb-4">Game Actions</h2>
-
-              {lastQuestion && (
-                <div className="mb-4 p-3 bg-blue-50 rounded-lg">
-                  <p className="text-sm text-gray-600">Last question:</p>
-                  <p className="font-medium">"{lastQuestion}"</p>
-                  {lastAnswer !== null && (
-                    <p className="text-sm text-gray-600 mt-1">
-                      Answer:{" "}
-                      <span className="font-medium">
-                        {lastAnswer === true
-                          ? "Yes"
-                          : lastAnswer === false
-                          ? "No"
-                          : lastAnswer}
-                      </span>
-                    </p>
-                  )}
-                </div>
-              )}
-
-              {isMyTurn ? (
-                <div className="space-y-4">
-                  <div>
-                    <textarea
-                      value={myQuestion}
-                      onChange={(e) => setMyQuestion(e.target.value)}
-                      placeholder="Ask a yes/no question..."
-                      className="w-full p-3 border border-gray-300 rounded-lg resize-none"
-                      rows={3}
-                    />
-                    <button
-                      onClick={handleAskQuestion}
-                      disabled={
-                        !myQuestion.trim() || hasAskedQuestion || hasMadeGuess
-                      }
-                      className="w-full mt-2 bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      {hasAskedQuestion ? "Question Asked" : "Ask Question"}
-                    </button>
-                  </div>
-
-                  <div className="text-center">
-                    <p className="text-gray-600 mb-2">Or</p>
-                    <button
-                      onClick={() => setShowGuessModal(true)}
-                      disabled={hasAskedQuestion || hasMadeGuess}
-                      className="w-full bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed"
-                    >
-                      {hasMadeGuess ? "Guess Made" : "Make a Guess"}
-                    </button>
-                  </div>
-
-                  {/* End Turn Button */}
-                  <div className="pt-4 border-t border-gray-200">
-                    <button
-                      onClick={endTurn}
-                      className="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700"
-                    >
-                      End Turn
-                    </button>
-                  </div>
-                </div>
-              ) : (
-                <div className="text-center">
-                  <p className="text-gray-600">Waiting for your turn...</p>
-                </div>
-              )}
-            </div>
-
-            {/* Players Status */}
-            <div className="bg-white rounded-lg shadow-lg p-6">
-              <h2 className="text-xl font-semibold mb-4">Players</h2>
-              <div className="space-y-3">
-                {players.map((player) => (
-                  <div
-                    key={player.id}
-                    className={`flex items-center justify-between p-3 rounded-lg ${
-                      currentTurn === player.id
-                        ? "bg-blue-50 border-2 border-blue-300"
-                        : "bg-gray-50"
-                    }`}
-                  >
-                    <span className="font-medium">{player.username}</span>
-                    <div className="flex items-center space-x-2">
-                      {player.isHost && (
-                        <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded">
-                          Host
-                        </span>
-                      )}
-                      {currentTurn === player.id && (
-                        <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">
-                          Turn
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
           </div>
         </div>
+
+        {/* Question Input */}
+        {isMyTurn && !hasAskedQuestion && !hasMadeGuess && (
+          <div className="mt-6 bg-white rounded-2xl shadow-2xl p-6">
+            <h3 className="text-xl font-bold text-gray-800 mb-4">Ask a Question</h3>
+            <div className="flex space-x-4">
+              <input
+                type="text"
+                value={myQuestion}
+                onChange={(e) => setMyQuestion(e.target.value)}
+                placeholder="Does your person wear glasses?"
+                className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                onKeyPress={(e) => e.key === 'Enter' && handleAskQuestion()}
+              />
+              <button
+                onClick={handleAskQuestion}
+                disabled={!myQuestion.trim()}
+                className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 disabled:from-gray-400 disabled:to-gray-500 text-white font-bold py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 disabled:transform-none disabled:cursor-not-allowed shadow-lg"
+              >
+                Ask Question
+              </button>
+            </div>
+          </div>
+        )}
+
+        {/* End Turn Button */}
+        {isMyTurn && (hasAskedQuestion || hasMadeGuess) && (
+          <div className="mt-6 text-center">
+            <button
+              onClick={endTurn}
+              className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold py-4 px-8 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
+            >
+              End Turn
+            </button>
+          </div>
+        )}
+
+        {/* Last Question/Answer Display */}
+        {lastQuestion && lastAnswer !== null && (
+          <div className="mt-6 bg-white rounded-2xl shadow-2xl p-6">
+            <h3 className="text-xl font-bold text-gray-800 mb-4">Last Question & Answer</h3>
+            <div className="bg-gradient-to-r from-yellow-100 to-yellow-200 rounded-xl p-4 border-2 border-yellow-300">
+              <p className="text-gray-700 text-lg">
+                <span className="font-semibold">Q:</span> "{lastQuestion}"
+              </p>
+              <p className="text-gray-700 text-lg mt-2">
+                <span className="font-semibold">A:</span> {lastAnswer ? "Yes" : "No"}
+              </p>
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* Character Selection Modal */}
+      {/* Modals */}
       <CharacterSelectionModal
-        characters={characters}
-        onSelectCharacter={handleCharacterSelect}
         isOpen={showCharacterSelection}
         onClose={() => setShowCharacterSelection(false)}
+        characters={characters}
+        onSelectCharacter={handleCharacterSelect}
       />
 
-      {/* Guess Modal */}
       <GuessModal
-        characters={characters}
-        onGuess={handleGuess}
         isOpen={showGuessModal}
         onClose={() => setShowGuessModal(false)}
+        characters={characters}
+        onGuess={handleGuess}
       />
 
-      {/* Question Answer Modal */}
       <QuestionAnswerModal
         isOpen={showQuestionModal}
+        onClose={closeQuestionModal}
         question={currentQuestion}
         onAnswer={handleAnswerQuestion}
-        onClose={closeQuestionModal}
-        isMyTurn={isMyTurn}
       />
 
-      {/* Answer Modal */}
       <AnswerModal
         isOpen={showAnswerModal}
-        question={lastQuestion}
+        onClose={handleContinueFromAnswer}
+        question={currentQuestion}
         answer={lastAnswer}
-        onContinue={handleContinueFromAnswer}
-        onClose={closeAnswerModal}
       />
 
-
-      {/* Wrong Guess Modal */}
       <WrongGuessModal
         isOpen={showWrongGuessModal}
-        guessedCharacter={guessedCharacter}
-        correctCharacter={correctCharacter}
         onClose={closeWrongGuessModal}
+        guessedCharacter={guessedCharacter}
       />
     </div>
   );

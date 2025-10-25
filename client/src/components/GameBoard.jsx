@@ -1,126 +1,105 @@
-import React, { useState } from "react";
+import React from "react";
 
-const GameBoard = ({
-  characters,
-  eliminatedCharacters,
-  onCharacterClick,
-  isMyTurn,
-  currentTurn,
-}) => {
-  const [clickedCard, setClickedCard] = useState(null);
-
-  const handleCharacterClick = (characterId) => {
-    if (!isMyTurn) return;
-
-    setClickedCard(characterId);
-    onCharacterClick(characterId);
-
-    // Reset animation after delay
-    setTimeout(() => {
-      setClickedCard(null);
-    }, 300);
-  };
-
+const GameBoard = ({ characters, eliminatedCharacters, onCharacterClick, isMyTurn }) => {
   return (
-    <div className="bg-white rounded-lg shadow-lg p-6">
-      <div className="mb-4">
-        <h2 className="text-xl font-semibold text-gray-800">Character Board</h2>
-        <p className="text-sm text-gray-600">
-          {isMyTurn
-            ? "Your turn - Click to eliminate characters"
-            : "Waiting for opponent..."}
-        </p>
-        <div className="mt-2 text-center text-sm text-gray-600">
-          Remaining: {characters.length - eliminatedCharacters.length} /{" "}
-          {characters.length}
+    <div className="bg-gradient-to-br from-red-500 to-red-600 rounded-2xl shadow-2xl p-6 relative overflow-hidden">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute inset-0" style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.3'%3E%3Ctext font-family='Arial' font-size='16' x='20' y='20' text-anchor='middle'%3E?%3C/text%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+          backgroundRepeat: 'repeat'
+        }}></div>
+      </div>
+
+      {/* Board Header */}
+      <div className="relative z-10 mb-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-bold text-white drop-shadow-lg">
+            Your Board
+          </h2>
+          <div className="bg-white/20 rounded-full px-4 py-2">
+            <span className="text-white font-semibold">
+              {characters.length - eliminatedCharacters.length} Remaining
+            </span>
+          </div>
         </div>
       </div>
 
-      <div className="grid grid-cols-4 md:grid-cols-6 gap-3">
-        {characters.map((character) => {
-          const isEliminated = eliminatedCharacters.includes(character.id);
-          const isClickable = isMyTurn && !isEliminated;
-          const isClicked = clickedCard === character.id;
-
-          return (
-            <div
-              key={character.id}
-              className={`relative transition-all duration-300 ${
-                isClickable
-                  ? "cursor-pointer hover:scale-105"
-                  : "cursor-not-allowed"
-              }`}
-              onClick={() => handleCharacterClick(character.id)}
-            >
+      {/* Character Grid */}
+      <div className="relative z-10">
+        <div className="grid grid-cols-6 gap-3">
+          {characters.map((character) => {
+            const isEliminated = eliminatedCharacters.includes(character.id);
+            return (
               <div
-                className={`relative w-full h-32 rounded-lg overflow-hidden border-2 transition-all duration-500 ${
-                  isEliminated
-                    ? "border-red-400 bg-red-100 opacity-60 transform rotate-y-180"
-                    : isClickable
-                    ? "border-blue-300 bg-blue-50 hover:border-blue-500 hover:shadow-lg"
-                    : "border-gray-200 bg-gray-50"
-                } ${isClicked ? "scale-95 shadow-lg" : ""}`}
-                style={{
-                  transformStyle: "preserve-3d",
-                  transform: isEliminated ? "rotateY(180deg)" : "rotateY(0deg)",
-                }}
+                key={character.id}
+                className={`relative group cursor-pointer transition-all duration-300 ${
+                  isMyTurn ? 'hover:scale-105' : 'cursor-not-allowed'
+                }`}
+                onClick={() => onCharacterClick(character.id)}
               >
-                {/* Front of card */}
-                <div
-                  className={`absolute inset-0 transition-opacity duration-500 ${
-                    isEliminated ? "opacity-0" : "opacity-100"
-                  }`}
-                >
-                  <img
-                    src={character.image}
-                    alt={character.name}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black to-transparent text-white text-xs p-2 text-center">
-                    <div className="font-medium">{character.name}</div>
-                  </div>
-                </div>
+                {/* Character Card */}
+                <div className={`relative aspect-square rounded-lg border-2 transition-all duration-300 ${
+                  isEliminated
+                    ? 'bg-gray-400 border-gray-500 opacity-60'
+                    : 'bg-yellow-300 border-yellow-400 hover:border-yellow-500 shadow-lg'
+                } ${isMyTurn && !isEliminated ? 'hover:shadow-xl' : ''}`}>
+                  
+                  {/* Character Image */}
+                  {!isEliminated ? (
+                    <div className="w-full h-full p-2">
+                      <img
+                        src={character.image}
+                        alt={character.name}
+                        className="w-full h-full object-cover rounded-md"
+                      />
+                    </div>
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center">
+                      <div className="text-gray-600 text-4xl font-bold">✕</div>
+                    </div>
+                  )}
 
-                {/* Back of card (eliminated) */}
-                <div
-                  className={`absolute inset-0 transition-opacity duration-500 ${
-                    isEliminated ? "opacity-100" : "opacity-0"
-                  }`}
-                  style={{ transform: "rotateY(180deg)" }}
-                >
-                  <div className="flex items-center justify-center h-full bg-red-100">
-                    <div className="text-center">
-                      <div className="text-3xl mb-2 text-red-500">❌</div>
-                      <div className="text-xs font-medium text-red-600">
-                        Eliminated
-                      </div>
+                  {/* Character Name */}
+                  <div className="absolute -bottom-6 left-0 right-0">
+                    <div className={`text-center px-1 py-1 rounded text-xs font-bold ${
+                      isEliminated 
+                        ? 'bg-gray-200 text-gray-600' 
+                        : 'bg-white text-gray-800 shadow-sm'
+                    }`}>
+                      {character.name}
                     </div>
                   </div>
+
+                  {/* Hover Effect */}
+                  {isMyTurn && !isEliminated && (
+                    <div className="absolute inset-0 bg-white/20 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
+                  )}
                 </div>
 
-                {/* Hover effect overlay */}
-                {isClickable && !isEliminated && (
-                  <div className="absolute inset-0 bg-blue-500 bg-opacity-0 hover:bg-opacity-10 transition-all duration-200 rounded-lg"></div>
+                {/* Click Indicator */}
+                {isMyTurn && !isEliminated && (
+                  <div className="absolute -top-2 -right-2 w-6 h-6 bg-green-500 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                    <span className="text-white text-xs font-bold">✓</span>
+                  </div>
                 )}
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
 
-      {/* Progress bar */}
-      <div className="mt-4">
-        <div className="w-full bg-gray-200 rounded-full h-2">
-          <div
-            className="bg-blue-500 h-2 rounded-full transition-all duration-500"
-            style={{
-              width: `${
-                ((characters.length - eliminatedCharacters.length) /
-                  characters.length) *
-                100
-              }%`,
-            }}
-          ></div>
+      {/* Board Footer */}
+      <div className="relative z-10 mt-8 pt-4 border-t border-white/20">
+        <div className="flex items-center justify-center space-x-4 text-white/90">
+          <div className="flex items-center space-x-2">
+            <div className="w-4 h-4 bg-yellow-300 rounded border border-yellow-400"></div>
+            <span className="text-sm">Active</span>
+          </div>
+          <div className="flex items-center space-x-2">
+            <div className="w-4 h-4 bg-gray-400 rounded border border-gray-500"></div>
+            <span className="text-sm">Eliminated</span>
+          </div>
         </div>
       </div>
     </div>

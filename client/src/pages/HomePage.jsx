@@ -1,157 +1,234 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useGame } from "../store/GameStore";
 
 const HomePage = () => {
   const navigate = useNavigate();
-  const { connectSocket, createRoom, joinRoom, isConnected, error, roomCode } =
-    useGame();
+  const { createRoom, joinRoom, roomCode } = useGame();
   const [username, setUsername] = useState("");
   const [inputRoomCode, setInputRoomCode] = useState("");
   const [isCreating, setIsCreating] = useState(false);
   const [isJoining, setIsJoining] = useState(false);
 
-  useEffect(() => {
-    if (!isConnected) {
-      connectSocket("Guest");
-    }
-  }, [isConnected, connectSocket]);
-
-  useEffect(() => {
-    console.log(
-      "HomePage useEffect - roomCode:",
-      roomCode,
-      "isConnected:",
-      isConnected
-    );
-    if (roomCode && isConnected) {
-      console.log("Navigating to lobby:", `/lobby/${roomCode}`);
-      navigate(`/lobby/${roomCode}`);
-    }
-  }, [roomCode, isConnected, navigate]);
-
-  const handleCreateRoom = async (e) => {
-    e.preventDefault();
+  const handleCreateRoom = async () => {
     if (!username.trim()) return;
-
     setIsCreating(true);
-    createRoom(username.trim());
+    await createRoom(username);
+    setIsCreating(false);
   };
 
-  const handleJoinRoom = async (e) => {
-    e.preventDefault();
+  const handleJoinRoom = async () => {
     if (!username.trim() || !inputRoomCode.trim()) return;
-
     setIsJoining(true);
-    joinRoom(inputRoomCode.trim().toUpperCase(), username.trim());
+    await joinRoom(inputRoomCode, username);
+    setIsJoining(false);
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-4 bg-gradient-to-br from-blue-50 to-purple-50">
-      <div className="max-w-md w-full">
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-blue-800 mb-2">GuessWho</h1>
-          <p className="text-gray-600">
-            The classic guessing game, now multiplayer!
+    <div className="min-h-screen bg-gradient-to-br from-red-500 to-blue-600 relative overflow-hidden">
+      {/* Background Pattern */}
+      <div className="absolute inset-0 opacity-10">
+        <div className="absolute inset-0" style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.3'%3E%3Ctext font-family='Arial' font-size='24' x='30' y='30' text-anchor='middle'%3E?%3C/text%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
+          backgroundRepeat: 'repeat'
+        }}></div>
+      </div>
+
+      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen p-4">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <div className="flex items-center justify-center mb-6">
+            <div className="bg-white rounded-full p-4 shadow-2xl">
+              <div className="w-16 h-16 bg-gradient-to-br from-red-500 to-blue-600 rounded-full flex items-center justify-center">
+                <span className="text-white text-2xl font-bold">?</span>
+              </div>
+            </div>
+          </div>
+          <h1 className="text-6xl font-bold text-white mb-4 drop-shadow-lg">
+            GUESS WHO
+          </h1>
+          <p className="text-xl text-white/90 font-medium">
+            The Classic Mystery Game • Now Multiplayer!
           </p>
         </div>
 
-        <div className="bg-white rounded-lg shadow-lg p-6">
-          <form onSubmit={handleCreateRoom} className="space-y-4">
-            <div>
-              <label
-                htmlFor="username"
-                className="block text-sm font-medium text-gray-700 mb-2"
-              >
+        {/* Game Preview */}
+        <div className="mb-12 max-w-4xl">
+          <div className="bg-white rounded-2xl shadow-2xl p-8">
+            <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">
+              How to Play
+            </h2>
+            
+            <div className="grid md:grid-cols-2 gap-8 mb-8">
+              {/* Game Boards Preview */}
+              <div className="space-y-4">
+                <h3 className="text-xl font-semibold text-gray-700">Game Boards</h3>
+                <div className="flex gap-4 justify-center">
+                  {/* Red Board Preview */}
+                  <div className="bg-red-500 rounded-lg p-4 shadow-lg">
+                    <div className="text-white text-sm font-bold mb-2">Player 1</div>
+                    <div className="grid grid-cols-3 gap-1">
+                      {[...Array(6)].map((_, i) => (
+                        <div key={i} className="w-8 h-8 bg-yellow-300 rounded border border-gray-300"></div>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  {/* Blue Board Preview */}
+                  <div className="bg-blue-500 rounded-lg p-4 shadow-lg">
+                    <div className="text-white text-sm font-bold mb-2">Player 2</div>
+                    <div className="grid grid-cols-3 gap-1">
+                      {[...Array(6)].map((_, i) => (
+                        <div key={i} className="w-8 h-8 bg-yellow-300 rounded border border-gray-300"></div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Game Rules */}
+              <div className="space-y-4">
+                <h3 className="text-xl font-semibold text-gray-700">Rules</h3>
+                <div className="space-y-3 text-gray-600">
+                  <div className="flex items-start gap-3">
+                    <div className="w-6 h-6 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <span className="text-white text-xs font-bold">1</span>
+                    </div>
+                    <p>Each player secretly picks one character</p>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <span className="text-white text-xs font-bold">2</span>
+                    </div>
+                    <p>Take turns asking yes/no questions</p>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="w-6 h-6 bg-yellow-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <span className="text-white text-xs font-bold">3</span>
+                    </div>
+                    <p>Eliminate characters based on answers</p>
+                  </div>
+                  <div className="flex items-start gap-3">
+                    <div className="w-6 h-6 bg-green-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <span className="text-white text-xs font-bold">4</span>
+                    </div>
+                    <p>First to guess correctly wins!</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Detailed Gameplay */}
+            <div className="bg-gray-50 rounded-xl p-6">
+              <h3 className="text-xl font-semibold text-gray-700 mb-4">Gameplay Details</h3>
+              <div className="grid md:grid-cols-2 gap-6">
+                <div>
+                  <h4 className="font-semibold text-gray-600 mb-2">Question Examples:</h4>
+                  <ul className="text-sm text-gray-600 space-y-1">
+                    <li>• "Does your person wear glasses?"</li>
+                    <li>• "Is your person a man?"</li>
+                    <li>• "Does your person have blonde hair?"</li>
+                    <li>• "Is your person wearing a hat?"</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="font-semibold text-gray-600 mb-2">Strategy Tips:</h4>
+                  <ul className="text-sm text-gray-600 space-y-1">
+                    <li>• Ask broad questions first</li>
+                    <li>• Eliminate half the board each turn</li>
+                    <li>• Pay attention to opponent's questions</li>
+                    <li>• Don't guess too early!</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Game Setup */}
+        <div className="w-full max-w-md">
+          <div className="bg-white rounded-2xl shadow-2xl p-8">
+            <h2 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+              Start Playing
+            </h2>
+
+            {/* Username Input */}
+            <div className="mb-6">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
                 Your Name
               </label>
               <input
                 type="text"
-                id="username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                 placeholder="Enter your name"
-                required
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+                maxLength={20}
               />
             </div>
 
-            <button
-              type="submit"
-              disabled={!username.trim() || isCreating || !isConnected}
-              className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isCreating ? "Creating Room..." : "Create New Room"}
-            </button>
-          </form>
-
-          <div className="my-6">
-            <div className="relative">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-gray-300" />
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">or</span>
-              </div>
-            </div>
-          </div>
-
-          <form onSubmit={handleJoinRoom} className="space-y-4">
-            <div>
-              <label
-                htmlFor="roomCode"
-                className="block text-sm font-medium text-gray-700 mb-2"
+            {/* Create Room */}
+            <div className="mb-6">
+              <button
+                onClick={handleCreateRoom}
+                disabled={!username.trim() || isCreating}
+                className="w-full bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 disabled:from-gray-400 disabled:to-gray-500 text-white font-bold py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 disabled:transform-none disabled:cursor-not-allowed shadow-lg"
               >
-                Room Code
-              </label>
-              <input
-                type="text"
-                id="roomCode"
-                value={inputRoomCode}
-                onChange={(e) => setInputRoomCode(e.target.value.toUpperCase())}
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                placeholder="Enter room code"
-                maxLength="5"
-                required
-              />
+                {isCreating ? "Creating..." : "Create New Room"}
+              </button>
             </div>
 
-            <button
-              type="submit"
-              disabled={
-                !username.trim() ||
-                !inputRoomCode.trim() ||
-                isJoining ||
-                !isConnected
-              }
-              className="w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {isJoining ? "Joining Room..." : "Join Room"}
-            </button>
-          </form>
-
-          {error && (
-            <div className="mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg">
-              {error}
+            {/* Divider */}
+            <div className="flex items-center mb-6">
+              <div className="flex-1 border-t border-gray-300"></div>
+              <span className="px-4 text-gray-500 font-medium">OR</span>
+              <div className="flex-1 border-t border-gray-300"></div>
             </div>
-          )}
 
-          {!isConnected && (
-            <div className="mt-4 p-3 bg-yellow-100 border border-yellow-400 text-yellow-700 rounded-lg">
-              Connecting to server...
+            {/* Join Room */}
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Room Code
+                </label>
+                <input
+                  type="text"
+                  value={inputRoomCode}
+                  onChange={(e) => setInputRoomCode(e.target.value.toUpperCase())}
+                  placeholder="Enter room code"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent text-center font-mono text-lg tracking-wider"
+                  maxLength={5}
+                />
+              </div>
+              <button
+                onClick={handleJoinRoom}
+                disabled={!username.trim() || !inputRoomCode.trim() || isJoining}
+                className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 disabled:from-gray-400 disabled:to-gray-500 text-white font-bold py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 disabled:transform-none disabled:cursor-not-allowed shadow-lg"
+              >
+                {isJoining ? "Joining..." : "Join Room"}
+              </button>
             </div>
-          )}
+
+            {/* Room Code Display */}
+            {roomCode && (
+              <div className="mt-6 p-4 bg-gradient-to-r from-yellow-100 to-yellow-200 rounded-lg border-2 border-yellow-300">
+                <p className="text-sm text-gray-700 mb-2">Room Created!</p>
+                <p className="text-2xl font-bold text-gray-800 font-mono tracking-wider">
+                  {roomCode}
+                </p>
+                <p className="text-xs text-gray-600 mt-1">
+                  Share this code with your friend
+                </p>
+              </div>
+            )}
+          </div>
         </div>
 
-        <div className="mt-8 text-center text-sm text-gray-500">
-          <p>How to play:</p>
-          <ul className="mt-2 space-y-1">
-            <li>• Create a room and share the code</li>
-            <li>• Choose a theme together</li>
-            <li>• Select your secret character</li>
-            <li>• Ask questions and eliminate characters</li>
-            <li>• First to guess correctly wins!</li>
-          </ul>
+        {/* Footer */}
+        <div className="mt-12 text-center">
+          <p className="text-white/80 text-sm">
+            Challenge your friends to the ultimate guessing game!
+          </p>
         </div>
       </div>
     </div>

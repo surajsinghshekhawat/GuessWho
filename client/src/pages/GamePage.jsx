@@ -7,7 +7,6 @@ import CharacterSelectionModal from "../components/CharacterSelectionModal";
 import GuessModal from "../components/GuessModal";
 import QuestionAnswerModal from "../components/QuestionAnswerModal";
 import AnswerModal from "../components/AnswerModal";
-import GameOverModal from "../components/GameOverModal";
 import WrongGuessModal from "../components/WrongGuessModal";
 
 const GamePage = () => {
@@ -74,10 +73,11 @@ const GamePage = () => {
 
   useEffect(() => {
     if (gameState === "finished") {
-      // Game ended, show results - no auto redirect
-      console.log("Game finished, showing results");
+      // Navigate to winner page
+      console.log("Game finished, navigating to winner page");
+      navigate(`/winner/${roomCode}`);
     }
-  }, [gameState]);
+  }, [gameState, navigate, roomCode]);
 
   const handleCharacterSelect = (characterId) => {
     selectSecretCharacter(characterId);
@@ -373,23 +373,6 @@ const GamePage = () => {
         onClose={closeAnswerModal}
       />
 
-      {/* Game Over Modal */}
-      <GameOverModal
-        isOpen={gameState === "finished"}
-        winner={winner}
-        winnerId={winnerId}
-        isCorrect={isCorrect}
-        guessedCharacter={guessedCharacter}
-        correctCharacter={correctCharacter}
-        mySecretCharacter={mySecretCharacter}
-        opponentSecretCharacter={opponentSecretCharacter}
-        myEliminatedCharacters={myEliminatedCharacters}
-        opponentEliminatedCharacters={opponentEliminatedCharacters}
-        characters={characters}
-        players={players}
-        onPlayAgain={handlePlayAgain}
-        onGoHome={handleGoHome}
-      />
 
       {/* Wrong Guess Modal */}
       <WrongGuessModal

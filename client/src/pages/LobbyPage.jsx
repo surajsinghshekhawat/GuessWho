@@ -24,7 +24,12 @@ const LobbyPage = () => {
   }, [isConnected, connectSocket]);
 
   useEffect(() => {
-    console.log("LobbyPage useEffect - gameState:", gameState, "roomCode:", roomCode);
+    console.log(
+      "LobbyPage useEffect - gameState:",
+      gameState,
+      "roomCode:",
+      roomCode
+    );
     if (gameState === "character-selection") {
       console.log("Navigating to game page:", `/game/${roomCode}`);
       navigate(`/game/${roomCode}`);
@@ -59,7 +64,7 @@ const LobbyPage = () => {
                 <p className="text-gray-600">Room: {roomCode}</p>
               </div>
             </div>
-            
+
             <button
               onClick={handleBackToHome}
               className="bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white font-bold py-2 px-4 rounded-lg transition-all duration-200"
@@ -72,7 +77,9 @@ const LobbyPage = () => {
         <div className="grid lg:grid-cols-2 gap-6">
           {/* Players List */}
           <div className="bg-white rounded-2xl shadow-2xl p-6">
-            <h2 className="text-xl font-semibold mb-4 text-gray-800">Players in Room</h2>
+            <h2 className="text-xl font-semibold mb-4 text-gray-800">
+              Players in Room
+            </h2>
             <div className="space-y-3">
               {players.map((player) => (
                 <div
@@ -85,7 +92,9 @@ const LobbyPage = () => {
                         {player.username.charAt(0).toUpperCase()}
                       </span>
                     </div>
-                    <span className="font-medium text-gray-800">{player.username}</span>
+                    <span className="font-medium text-gray-800">
+                      {player.username}
+                    </span>
                   </div>
                   {player.isHost && (
                     <span className="text-xs bg-red-500 text-white px-2 py-1 rounded">
@@ -105,7 +114,9 @@ const LobbyPage = () => {
 
           {/* Theme Selection */}
           <div className="bg-white rounded-2xl shadow-2xl p-6">
-            <h2 className="text-xl font-semibold mb-4 text-gray-800">Choose Theme</h2>
+            <h2 className="text-xl font-semibold mb-4 text-gray-800">
+              Choose Theme
+            </h2>
             <div className="grid grid-cols-1 gap-3">
               {themes.map((theme) => (
                 <button
@@ -123,8 +134,12 @@ const LobbyPage = () => {
                       <span className="text-white text-lg font-bold">?</span>
                     </div>
                     <div>
-                      <div className="font-medium text-lg text-gray-800">{theme.name}</div>
-                      <div className="text-sm text-gray-600">{theme.description}</div>
+                      <div className="font-medium text-lg text-gray-800">
+                        {theme.name}
+                      </div>
+                      <div className="text-sm text-gray-600">
+                        {theme.description}
+                      </div>
                     </div>
                   </div>
                 </button>
@@ -133,13 +148,17 @@ const LobbyPage = () => {
 
             {players.length < 2 && (
               <div className="mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg">
-                <p className="text-sm font-medium">Need 2 players to start the game</p>
+                <p className="text-sm font-medium">
+                  Need 2 players to start the game
+                </p>
               </div>
             )}
 
             {!isHost && (
               <div className="mt-4 p-3 bg-blue-100 border border-blue-400 text-blue-700 rounded-lg">
-                <p className="text-sm font-medium">Only the host can select the theme</p>
+                <p className="text-sm font-medium">
+                  Only the host can select the theme
+                </p>
               </div>
             )}
           </div>
@@ -147,7 +166,9 @@ const LobbyPage = () => {
 
         {/* Game Rules */}
         <div className="mt-6 bg-white rounded-2xl shadow-2xl p-6">
-          <h2 className="text-xl font-semibold mb-4 text-gray-800">How to Play</h2>
+          <h2 className="text-xl font-semibold mb-4 text-gray-800">
+            How to Play
+          </h2>
           <div className="grid md:grid-cols-2 gap-6">
             <div>
               <h3 className="font-semibold text-gray-700 mb-2">Game Rules:</h3>
@@ -159,7 +180,9 @@ const LobbyPage = () => {
               </ul>
             </div>
             <div>
-              <h3 className="font-semibold text-gray-700 mb-2">Question Examples:</h3>
+              <h3 className="font-semibold text-gray-700 mb-2">
+                Question Examples:
+              </h3>
               <ul className="text-sm text-gray-600 space-y-1">
                 <li>• "Does your person wear glasses?"</li>
                 <li>• "Is your person a man?"</li>

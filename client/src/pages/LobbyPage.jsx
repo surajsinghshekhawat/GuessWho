@@ -105,9 +105,9 @@ const LobbyPage = () => {
               ))}
             </div>
 
-            {players.length < 1 && (
+            {players.length < 2 && (
               <div className="mt-4 p-3 bg-yellow-100 border border-yellow-400 text-yellow-700 rounded-lg">
-                Waiting for players to join...
+                Waiting for players to join... (Need 2 players to start)
               </div>
             )}
           </div>
@@ -120,9 +120,9 @@ const LobbyPage = () => {
                 <button
                   key={theme.id}
                   onClick={() => handleStartGame(theme.id)}
-                  disabled={players.length < 1 || !isHost}
+                  disabled={players.length < 2 || !isHost}
                   className={`p-3 rounded-lg border-2 text-left transition-colors ${
-                    players.length < 1 || !isHost
+                    players.length < 2 || !isHost
                       ? "border-gray-200 bg-gray-50 opacity-50 cursor-not-allowed"
                       : "border-gray-200 hover:border-blue-300 hover:bg-blue-50"
                   }`}

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useGame } from "../store/GameStore";
 
@@ -19,6 +19,7 @@ const WinnerPage = () => {
     players,
     playAgain,
     resetGame,
+    socket,
   } = useGame();
 
   console.log("WinnerPage - All props received:", {
@@ -28,6 +29,23 @@ const WinnerPage = () => {
     players,
     roomCode
   });
+
+  // Handle game reset - navigate to lobby when game is reset
+  useEffect(() => {
+    const handleGameReset = () => {
+      console.log("WinnerPage - Game reset received, navigating to lobby");
+      navigate(`/lobby/${roomCode}`);
+    };
+
+    // Listen for gameReset event
+    if (socket) {
+      socket.on("gameReset", handleGameReset);
+      
+      return () => {
+        socket.off("gameReset", handleGameReset);
+      };
+    }
+  }, [navigate, roomCode, socket]);
 
   // Get winner name with robust fallback
   const getWinnerName = () => {
@@ -77,7 +95,7 @@ const WinnerPage = () => {
         {/* Header */}
         <div className="text-center mb-8">
           <h1 className="text-6xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-            {isCorrect ? "🎉 Congratulations!" : "😔 Game Over"}
+            {isCorrect ? "Congratulations!" : "Game Over"}
           </h1>
           <h2 className="text-4xl font-semibold mb-6 text-gray-800">
             {winnerName} Wins!
@@ -85,8 +103,8 @@ const WinnerPage = () => {
           <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6 mb-8">
             <p className="text-2xl text-gray-700">
               {isCorrect
-                ? `🎯 You correctly guessed ${correctCharacter?.name}!`
-                : `💡 The correct answer was ${correctCharacter?.name}`}
+                ? `You correctly guessed ${correctCharacter?.name}!`
+                : `The correct answer was ${correctCharacter?.name}`}
             </p>
           </div>
         </div>
@@ -206,13 +224,13 @@ const WinnerPage = () => {
             onClick={handlePlayAgain}
             className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 rounded-xl text-xl font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg"
           >
-            🎮 Play Again
+            Play Again
           </button>
           <button
             onClick={handleGoHome}
             className="bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white px-8 py-4 rounded-xl text-xl font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg"
           >
-            🏠 Go Home
+            Go Home
           </button>
         </div>
       </div>

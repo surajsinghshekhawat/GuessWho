@@ -106,6 +106,12 @@ const registerSocketHandlers = (io) => {
         return;
       }
 
+      // Check if both players are present
+      if (room.players.length < 2) {
+        socket.emit("error", { message: "Need at least 2 players to start the game" });
+        return;
+      }
+
       room.theme = theme;
       room.characters = characters[theme] || [];
       room.gameState = "character-selection";
@@ -365,29 +371,33 @@ const registerSocketHandlers = (io) => {
 
         room.gameState = "finished";
 
-        const gameOverData = {
-          winner: winnerName,
-          winnerId: socket.id,
-          isCorrect: true,
-          guessedCharacter: room.characters.find((c) => c.id === characterId),
-          correctCharacter: room.characters.find(
-            (c) => c.id === opponentCharacterId
-          ),
-          mySecretCharacter: room.characters.find(
-            (c) => c.id === room.playerCharacters.get(socket.id)
-          ),
-          opponentSecretCharacter: room.characters.find(
-            (c) => c.id === room.playerCharacters.get(opponentId)
-          ),
-          myEliminatedCharacters:
-            room.eliminatedCharacters.get(socket.id) || [],
-          opponentEliminatedCharacters:
-            room.eliminatedCharacters.get(opponentId) || [],
-        };
+        // Send game over data to all players
+        const players = Array.from(room.playerCharacters.keys());
+        players.forEach((playerId) => {
+          const isWinner = playerId === socket.id;
+          const gameOverData = {
+            winner: winnerName,
+            winnerId: socket.id,
+            isCorrect: isWinner, // Only true for the winner
+            guessedCharacter: room.characters.find((c) => c.id === characterId),
+            correctCharacter: room.characters.find(
+              (c) => c.id === opponentCharacterId
+            ),
+            mySecretCharacter: room.characters.find(
+              (c) => c.id === room.playerCharacters.get(playerId)
+            ),
+            opponentSecretCharacter: room.characters.find(
+              (c) => c.id === room.playerCharacters.get(playerId === socket.id ? opponentId : socket.id)
+            ),
+            myEliminatedCharacters:
+              room.eliminatedCharacters.get(playerId) || [],
+            opponentEliminatedCharacters:
+              room.eliminatedCharacters.get(playerId === socket.id ? opponentId : socket.id) || [],
+          };
 
-        console.log("gameOver - sending data:", gameOverData);
-
-        io.to(roomCode).emit("gameOver", gameOverData);
+          console.log(`gameOver - sending data to player ${playerId}:`, gameOverData);
+          io.to(playerId).emit("gameOver", gameOverData);
+        });
       } else {
         // Wrong guess - end turn automatically
         const players = Array.from(room.playerCharacters.keys());

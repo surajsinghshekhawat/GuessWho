@@ -39,6 +39,16 @@ const HomePage = () => {
     
     try {
       console.log("About to call createRoom function");
+      
+      // Wait for socket to connect if not already connected
+      if (!isConnected) {
+        console.log("Socket not connected, waiting for connection...");
+        // Try to reconnect
+        connectSocket("Guest");
+        // Wait a bit for connection
+        await new Promise(resolve => setTimeout(resolve, 1000));
+      }
+      
       await createRoom(username);
       console.log("Create room called successfully");
     } catch (error) {
@@ -61,7 +71,10 @@ const HomePage = () => {
     console.log("=== ROOM CODE DEBUG ===");
     console.log("roomCode:", roomCode);
     if (roomCode) {
-      console.log("Room code exists, navigating to lobby:", `/lobby/${roomCode}`);
+      console.log(
+        "Room code exists, navigating to lobby:",
+        `/lobby/${roomCode}`
+      );
       navigate(`/lobby/${roomCode}`);
     }
   }, [roomCode, navigate]);
@@ -69,7 +82,7 @@ const HomePage = () => {
   return (
     <div className="min-h-screen bg-red-500 relative overflow-hidden">
       {/* Background Pattern - Random Blue Question Marks */}
-      <div className="absolute inset-0 opacity-30">
+      <div className="absolute inset-0 opacity-50">
         {[...Array(50)].map((_, i) => (
           <div
             key={i}

@@ -33,7 +33,8 @@ const GameOverModal = ({
   const getWinnerName = () => {
     console.log("getWinnerName - winner:", winner, "winnerId:", winnerId, "players:", players);
     
-    if (winner && winner !== "undefined" && winner !== null) {
+    // Check for various forms of undefined/null/empty
+    if (winner && winner !== "undefined" && winner !== null && winner !== "" && winner !== "null") {
       console.log("Using winner prop:", winner);
       return winner;
     }
@@ -60,6 +61,7 @@ const GameOverModal = ({
   };
 
   const displayWinner = getWinnerName();
+  console.log("displayWinner final result:", displayWinner);
 
   const myRemainingCount = characters.length - myEliminatedCharacters.length;
   const opponentRemainingCount =

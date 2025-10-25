@@ -243,8 +243,14 @@ const useGameStore = create((set, get) => ({
 
   createRoom: (username) => {
     const { socket } = get();
+    console.log("createRoom called with username:", username);
+    console.log("Socket exists:", !!socket);
+    console.log("Socket connected:", socket?.connected);
     if (socket) {
       socket.emit("createRoom", { username });
+      console.log("createRoom event emitted");
+    } else {
+      console.error("No socket available for createRoom");
     }
   },
 

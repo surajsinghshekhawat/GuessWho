@@ -72,6 +72,7 @@ const GamePage = () => {
   }, [gameState, mySecretCharacterId]);
 
   useEffect(() => {
+    console.log("GamePage useEffect - gameState:", gameState, "roomCode:", roomCode);
     if (gameState === "finished") {
       // Navigate to winner page
       console.log("Game finished, navigating to winner page");
@@ -153,32 +154,6 @@ const GamePage = () => {
     );
   }
 
-  if (gameState === "finished") {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 p-4">
-        <div className="max-w-4xl mx-auto text-center">
-          <h1 className="text-3xl font-bold text-green-600 mb-4">Game Over!</h1>
-          <p className="text-xl text-gray-700 mb-6">
-            {winner ? `${winner.username} wins!` : "Game ended"}
-          </p>
-          <div className="space-y-4">
-            <button
-              onClick={() => navigate("/")}
-              className="bg-blue-600 text-white py-2 px-6 rounded-lg hover:bg-blue-700 mr-4"
-            >
-              Back to Home
-            </button>
-            <button
-              onClick={resetGame}
-              className="bg-green-600 text-white py-2 px-6 rounded-lg hover:bg-green-700"
-            >
-              Play Again
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 p-4">

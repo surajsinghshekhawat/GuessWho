@@ -77,7 +77,7 @@ const GamePage = () => {
       console.log("Game finished, navigating to winner page");
       navigate(`/winner/${roomCode}`);
     }
-  }, [gameState, navigate, roomCode]);
+  }, [gameState, roomCode, navigate]);
 
   const handleCharacterSelect = (characterId) => {
     selectSecretCharacter(characterId);
@@ -149,32 +149,6 @@ const GamePage = () => {
           >
             Go Home
           </button>
-        </div>
-      </div>
-    );
-  }
-
-  if (gameState === "character-selection") {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-red-500 to-blue-600 flex items-center justify-center p-4">
-        <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full text-center">
-          <div className="text-6xl mb-4">👤</div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">
-            Selecting Characters
-          </h2>
-          <p className="text-gray-600 mb-6">
-            Players are choosing their secret characters
-          </p>
-          <div className="space-y-2">
-            {players.map((player) => (
-              <div key={player.id} className="flex items-center justify-center space-x-2">
-                <div className={`w-3 h-3 rounded-full ${player.id === socket?.id ? 'bg-green-500' : 'bg-yellow-500'}`}></div>
-                <span className="text-gray-700">
-                  {player.username} {player.id === socket?.id ? '(You)' : ''}
-                </span>
-              </div>
-            ))}
-          </div>
         </div>
       </div>
     );

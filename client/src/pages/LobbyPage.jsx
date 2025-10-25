@@ -75,8 +75,12 @@ const LobbyPage = () => {
           <div className="flex flex-col sm:flex-row items-center justify-between space-y-4 sm:space-y-0">
             <div className="flex items-center space-x-4">
               <div>
-                <h1 className="text-xl sm:text-2xl font-bold text-gray-800">Guess Who</h1>
-                <p className="text-gray-600 text-sm sm:text-base">Room: {roomCode}</p>
+                <h1 className="text-xl sm:text-2xl font-bold text-gray-800">
+                  Guess Who
+                </h1>
+                <p className="text-gray-600 text-sm sm:text-base">
+                  Room: {roomCode}
+                </p>
               </div>
             </div>
 
@@ -102,9 +106,11 @@ const LobbyPage = () => {
                   className="flex items-center justify-between p-3 bg-yellow-100 rounded-lg border-2 border-yellow-300"
                 >
                   <div className="flex items-center space-x-3">
-                    <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                      index === 0 ? 'bg-red-500' : 'bg-blue-500'
-                    }`}>
+                    <div
+                      className={`w-8 h-8 rounded-full flex items-center justify-center ${
+                        index === 0 ? "bg-red-500" : "bg-blue-500"
+                      }`}
+                    >
                       <span className="text-white text-sm font-bold">
                         {player.username.charAt(0).toUpperCase()}
                       </span>
@@ -188,7 +194,9 @@ const LobbyPage = () => {
           </h2>
           <div className="grid md:grid-cols-2 gap-4 sm:gap-6">
             <div>
-              <h3 className="font-semibold text-gray-700 mb-2 text-sm sm:text-base">Game Rules:</h3>
+              <h3 className="font-semibold text-gray-700 mb-2 text-sm sm:text-base">
+                Game Rules:
+              </h3>
               <ul className="text-xs sm:text-sm text-gray-600 space-y-1">
                 <li>• Each player secretly picks one character</li>
                 <li>• Take turns asking yes/no questions</li>

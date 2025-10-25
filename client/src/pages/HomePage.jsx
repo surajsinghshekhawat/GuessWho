@@ -161,7 +161,9 @@ const HomePage = () => {
 
                 {/* Game Rules */}
                 <div className="space-y-3 sm:space-y-4">
-                  <h3 className="text-lg sm:text-xl font-semibold text-gray-700">Rules</h3>
+                  <h3 className="text-lg sm:text-xl font-semibold text-gray-700">
+                    Rules
+                  </h3>
                   <div className="space-y-2 sm:space-y-3 text-sm sm:text-base text-gray-600">
                     <div className="flex items-start gap-2 sm:gap-3">
                       <div className="w-5 h-5 sm:w-6 sm:h-6 bg-red-500 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -264,7 +266,9 @@ const HomePage = () => {
             {/* Divider */}
             <div className="flex items-center mb-4 sm:mb-6">
               <div className="flex-1 border-t border-gray-300"></div>
-              <span className="px-3 sm:px-4 text-gray-500 font-medium text-sm sm:text-base">OR</span>
+              <span className="px-3 sm:px-4 text-gray-500 font-medium text-sm sm:text-base">
+                OR
+              </span>
               <div className="flex-1 border-t border-gray-300"></div>
             </div>
 

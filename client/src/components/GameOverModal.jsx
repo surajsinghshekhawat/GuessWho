@@ -18,25 +18,44 @@ const GameOverModal = ({
 }) => {
   if (!isOpen) return null;
 
+  console.log("GameOverModal DEBUG - All props:", {
+    winner,
+    winnerId,
+    isCorrect,
+    players,
+    guessedCharacter,
+    correctCharacter,
+    mySecretCharacter,
+    opponentSecretCharacter
+  });
+
   // Get winner name from winnerId if winner is undefined
   const getWinnerName = () => {
+    console.log("getWinnerName - winner:", winner, "winnerId:", winnerId, "players:", players);
+    
     if (winner && winner !== "undefined" && winner !== null) {
+      console.log("Using winner prop:", winner);
       return winner;
     }
     
     // Try to find winner from players list using winnerId
     if (winnerId && players && players.length > 0) {
       const winnerPlayer = players.find(p => p.id === winnerId);
+      console.log("Found winnerPlayer:", winnerPlayer);
       if (winnerPlayer && winnerPlayer.username) {
+        console.log("Using winnerPlayer.username:", winnerPlayer.username);
         return winnerPlayer.username;
       }
     }
     
     // Fallback: use winnerId to create a player name
     if (winnerId) {
-      return `Player ${winnerId.slice(-4)}`;
+      const fallbackName = `Player ${winnerId.slice(-4)}`;
+      console.log("Using fallback name:", fallbackName);
+      return fallbackName;
     }
     
+    console.log("Using Unknown Player fallback");
     return "Unknown Player";
   };
 

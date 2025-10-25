@@ -161,7 +161,12 @@ const useGameStore = create((set, get) => ({
 
     socket.on("gameOver", (data) => {
       console.log("gameOver event received:", data);
-      console.log("gameOver - data.winner:", data.winner, "typeof:", typeof data.winner);
+      console.log(
+        "gameOver - data.winner:",
+        data.winner,
+        "typeof:",
+        typeof data.winner
+      );
       set({
         winner: data.winner,
         winnerId: data.winnerId,

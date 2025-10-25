@@ -28,3 +28,4 @@ echo "Starting both frontend and backend..."
 npm run dev
 
 
+

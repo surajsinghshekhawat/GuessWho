@@ -356,7 +356,12 @@ const registerSocketHandlers = (io) => {
           `Player ${socket.id.slice(-4)}` ||
           "Unknown Player";
 
-        console.log("gameOver - winnerName:", winnerName, "winnerPlayer:", winnerPlayer);
+        console.log(
+          "gameOver - winnerName:",
+          winnerName,
+          "winnerPlayer:",
+          winnerPlayer
+        );
 
         room.gameState = "finished";
 

@@ -39,3 +39,4 @@ echo "3. Connect GitHub repo"
 echo "4. Deploy server folder first"
 echo "5. Deploy client folder second"
 echo "6. Set environment variables"
+

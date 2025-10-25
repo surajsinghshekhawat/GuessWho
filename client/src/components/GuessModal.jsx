@@ -74,3 +74,4 @@ const GuessModal = ({ characters, onGuess, isOpen, onClose }) => {
 };
 
 export default GuessModal;
+

@@ -3,6 +3,7 @@ import React from "react";
 const GameOverModal = ({
   isOpen,
   winner,
+  winnerId,
   isCorrect,
   guessedCharacter,
   correctCharacter,
@@ -11,12 +12,35 @@ const GameOverModal = ({
   myEliminatedCharacters,
   opponentEliminatedCharacters,
   characters,
+  players,
   onPlayAgain,
   onGoHome,
 }) => {
   if (!isOpen) return null;
 
-  console.log("GameOverModal - winner:", winner, "isCorrect:", isCorrect, "all props:", { winner, isCorrect, guessedCharacter, correctCharacter, mySecretCharacter, opponentSecretCharacter });
+  // Get winner name from winnerId if winner is undefined
+  const getWinnerName = () => {
+    if (winner && winner !== "undefined" && winner !== null) {
+      return winner;
+    }
+    
+    // Try to find winner from players list using winnerId
+    if (winnerId && players && players.length > 0) {
+      const winnerPlayer = players.find(p => p.id === winnerId);
+      if (winnerPlayer && winnerPlayer.username) {
+        return winnerPlayer.username;
+      }
+    }
+    
+    // Fallback: use winnerId to create a player name
+    if (winnerId) {
+      return `Player ${winnerId.slice(-4)}`;
+    }
+    
+    return "Unknown Player";
+  };
+
+  const displayWinner = getWinnerName();
 
   const myRemainingCount = characters.length - myEliminatedCharacters.length;
   const opponentRemainingCount =
@@ -30,7 +54,7 @@ const GameOverModal = ({
             {isCorrect ? "🎉 Congratulations!" : "😔 Game Over"}
           </h1>
           <h2 className="text-3xl font-semibold mb-4 text-gray-800">
-            {winner || "Unknown Player"} Wins!
+            {displayWinner} Wins!
           </h2>
           <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-lg p-4 mb-6">
             <p className="text-xl text-gray-700">

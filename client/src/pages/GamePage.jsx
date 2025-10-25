@@ -377,6 +377,7 @@ const GamePage = () => {
       <GameOverModal
         isOpen={gameState === "finished"}
         winner={winner}
+        winnerId={winnerId}
         isCorrect={isCorrect}
         guessedCharacter={guessedCharacter}
         correctCharacter={correctCharacter}
@@ -385,6 +386,7 @@ const GamePage = () => {
         myEliminatedCharacters={myEliminatedCharacters}
         opponentEliminatedCharacters={opponentEliminatedCharacters}
         characters={characters}
+        players={players}
         onPlayAgain={handlePlayAgain}
         onGoHome={handleGoHome}
       />

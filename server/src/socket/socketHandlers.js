@@ -441,26 +441,23 @@ const registerSocketHandlers = (io) => {
         return;
       }
 
-      // Reset game state but keep players and room settings
-      room.gameState = "waiting";
-      room.characters = [];
-      room.playerCharacters.clear();
-      room.eliminatedCharacters.clear();
-      room.currentTurn = null;
-      room.turnCount = 0;
-      room.currentQuestion = null;
-      room.currentAnswer = null;
-      room.waitingForAnswer = false;
+      // Only reset game state if it's currently finished
+      if (room.gameState === "finished") {
+        // Reset game state but keep players and room settings
+        room.gameState = "waiting";
+        room.characters = [];
+        room.playerCharacters.clear();
+        room.eliminatedCharacters.clear();
+        room.currentTurn = null;
+        room.turnCount = 0;
+        room.currentQuestion = null;
+        room.currentAnswer = null;
+        room.waitingForAnswer = false;
 
-      // Notify all players that game has been reset
-      io.to(roomCode).emit("gameReset", {
-        gameState: "waiting",
-        message: "Game reset! Waiting for host to select theme...",
-      });
-
-      console.log(
-        `Player ${socket.id} requested play again for room ${roomCode}`
-      );
+        console.log(`Player ${socket.id} requested play again for room ${roomCode} - game reset`);
+      } else {
+        console.log(`Player ${socket.id} requested play again for room ${roomCode} - game already reset`);
+      }
     });
 
     // Handle disconnection

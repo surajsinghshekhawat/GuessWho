@@ -223,12 +223,7 @@ const useGameStore = create((set, get) => ({
         error: null,
       });
       
-      // Navigate to lobby if we're on the winner page
-      if (window.location.pathname.includes('/winner/')) {
-        const roomCode = window.location.pathname.split('/winner/')[1];
-        console.log("GameStore - Navigating to lobby:", roomCode);
-        window.location.href = `/lobby/${roomCode}`;
-      }
+      // Don't auto-navigate - let each player decide when to go to lobby
     });
 
     socket.on("error", (error) => {

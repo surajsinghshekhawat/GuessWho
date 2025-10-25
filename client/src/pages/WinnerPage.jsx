@@ -59,6 +59,7 @@ const WinnerPage = () => {
   console.log("WinnerPage - final winnerName:", winnerName);
 
   const handlePlayAgain = () => {
+    // Reset game state on server and navigate to lobby
     playAgain();
     navigate(`/lobby/${roomCode}`);
   };

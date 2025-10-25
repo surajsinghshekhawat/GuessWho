@@ -13,7 +13,7 @@ const AnswerModal = ({
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full">
+      <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full">
         {/* Header */}
         <div className="bg-red-500 p-6 relative overflow-hidden">
           {/* Background Pattern - Random Blue Question Marks */}

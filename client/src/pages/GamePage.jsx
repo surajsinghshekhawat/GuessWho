@@ -194,10 +194,22 @@ const GamePage = () => {
           <div className="lg:col-span-2">
             <GameBoard
               characters={characters}
-              eliminatedCharacters={myEliminatedCharacters}
+              eliminatedCharacters={eliminatedCharacters}
               onCharacterClick={handleCharacterClick}
               isMyTurn={isMyTurn}
             />
+            
+            {/* End Turn Button - Below Game Board */}
+            {isMyTurn && (hasAskedQuestion || hasMadeGuess) && (
+              <div className="mt-6 text-center">
+                <button
+                  onClick={endTurn}
+                  className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-4 px-8 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
+                >
+                  End Turn
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Right Panel */}
@@ -238,30 +250,21 @@ const GamePage = () => {
           </div>
         )}
 
-        {/* End Turn Button */}
-        {isMyTurn && (hasAskedQuestion || hasMadeGuess) && (
-          <div className="mt-6 text-center">
-            <button
-              onClick={endTurn}
-              className="bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-bold py-4 px-8 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
-            >
-              End Turn
-            </button>
-          </div>
-        )}
-
-        {/* Last Question/Answer Display */}
+        {/* Last Question/Answer Display - Parallel with Game Actions */}
         {lastQuestion && lastAnswer !== null && (
-          <div className="lg:col-span-2 mt-6 bg-white rounded-2xl shadow-2xl p-6">
-            <h3 className="text-xl font-bold text-gray-800 mb-4">Last Question & Answer</h3>
-            <div className="bg-yellow-100 rounded-xl p-4 border-2 border-yellow-300">
-              <p className="text-gray-700 text-lg">
-                <span className="font-semibold">Q:</span> "{lastQuestion}"
-              </p>
-              <p className="text-gray-700 text-lg mt-2">
-                <span className="font-semibold">A:</span> {lastAnswer ? "Yes" : "No"}
-              </p>
+          <div className="mt-6 grid lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2 bg-white rounded-2xl shadow-2xl p-6">
+              <h3 className="text-xl font-bold text-gray-800 mb-4">Last Question & Answer</h3>
+              <div className="bg-yellow-100 rounded-xl p-4 border-2 border-yellow-300">
+                <p className="text-gray-700 text-lg">
+                  <span className="font-semibold">Q:</span> "{lastQuestion}"
+                </p>
+                <p className="text-gray-700 text-lg mt-2">
+                  <span className="font-semibold">A:</span> {lastAnswer ? "Yes" : "No"}
+                </p>
+              </div>
             </div>
+            <div className="lg:col-span-1"></div>
           </div>
         )}
       </div>
@@ -291,7 +294,7 @@ const GamePage = () => {
       <AnswerModal
         isOpen={showAnswerModal}
         onClose={handleContinueFromAnswer}
-        question={currentQuestion}
+        question={lastQuestion}
         answer={lastAnswer}
       />
 

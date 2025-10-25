@@ -21,6 +21,14 @@ const WinnerPage = () => {
     resetGame,
   } = useGame();
 
+  console.log("WinnerPage - All props received:", {
+    winner,
+    winnerId,
+    isCorrect,
+    players,
+    roomCode
+  });
+
   // Get winner name with robust fallback
   const getWinnerName = () => {
     console.log("WinnerPage - winner:", winner, "winnerId:", winnerId, "players:", players);

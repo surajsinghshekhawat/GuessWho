@@ -9,15 +9,25 @@ const WrongGuessModal = ({
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full">
+      <div className="bg-white rounded-3xl shadow-2xl max-w-md w-full">
         {/* Header */}
-        <div className="bg-gradient-to-r from-red-500 to-red-600 p-6 relative overflow-hidden">
-          {/* Background Pattern */}
-          <div className="absolute inset-0 opacity-10">
-            <div className="absolute inset-0" style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.3'%3E%3Ctext font-family='Arial' font-size='16' x='20' y='20' text-anchor='middle'%3E?%3C/text%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-              backgroundRepeat: 'repeat'
-            }}></div>
+        <div className="bg-red-500 p-6 relative overflow-hidden">
+          {/* Background Pattern - Random Blue Question Marks */}
+          <div className="absolute inset-0 opacity-30">
+            {[...Array(15)].map((_, i) => (
+              <div
+                key={i}
+                className="absolute text-blue-500 text-lg font-bold"
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  top: `${Math.random() * 100}%`,
+                  transform: `rotate(${Math.random() * 360}deg)`,
+                  fontSize: `${12 + Math.random() * 8}px`,
+                }}
+              >
+                ?
+              </div>
+            ))}
           </div>
           
           <div className="relative z-10 text-center">
@@ -33,7 +43,7 @@ const WrongGuessModal = ({
 
         {/* Guessed Character */}
         <div className="p-6">
-          <div className="bg-gradient-to-r from-gray-100 to-gray-200 rounded-xl p-6 border-2 border-gray-300 text-center">
+          <div className="bg-gray-100 rounded-xl p-6 border-2 border-gray-300 text-center">
             <h3 className="text-lg font-semibold text-gray-800 mb-4">You Guessed:</h3>
             
             <div className="bg-yellow-300 rounded-xl border-2 border-yellow-400 shadow-lg mx-auto max-w-32">
@@ -64,7 +74,7 @@ const WrongGuessModal = ({
         <div className="p-6 pt-0">
           <button
             onClick={onClose}
-            className="w-full bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white font-bold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
+            className="w-full bg-gray-500 hover:bg-gray-600 text-white font-bold py-4 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
           >
             Continue Game
           </button>

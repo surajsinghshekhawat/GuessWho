@@ -10,15 +10,25 @@ const GuessModal = ({
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
-      <div className="bg-white rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
+      <div className="bg-white rounded-3xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-hidden">
         {/* Header */}
-        <div className="bg-gradient-to-r from-red-500 to-blue-600 p-6 relative overflow-hidden">
-          {/* Background Pattern */}
-          <div className="absolute inset-0 opacity-10">
-            <div className="absolute inset-0" style={{
-              backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.3'%3E%3Ctext font-family='Arial' font-size='16' x='20' y='20' text-anchor='middle'%3E?%3C/text%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-              backgroundRepeat: 'repeat'
-            }}></div>
+        <div className="bg-red-500 p-6 relative overflow-hidden">
+          {/* Background Pattern - Random Blue Question Marks */}
+          <div className="absolute inset-0 opacity-30">
+            {[...Array(20)].map((_, i) => (
+              <div
+                key={i}
+                className="absolute text-blue-500 text-lg font-bold"
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  top: `${Math.random() * 100}%`,
+                  transform: `rotate(${Math.random() * 360}deg)`,
+                  fontSize: `${12 + Math.random() * 8}px`,
+                }}
+              >
+                ?
+              </div>
+            ))}
           </div>
           
           <div className="relative z-10 flex items-center justify-between">

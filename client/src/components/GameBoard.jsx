@@ -2,13 +2,23 @@ import React from "react";
 
 const GameBoard = ({ characters, eliminatedCharacters, onCharacterClick, isMyTurn }) => {
   return (
-    <div className="bg-gradient-to-br from-red-500 to-red-600 rounded-2xl shadow-2xl p-6 relative overflow-hidden">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-10">
-        <div className="absolute inset-0" style={{
-          backgroundImage: `url("data:image/svg+xml,%3Csvg width='40' height='40' viewBox='0 0 40 40' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.3'%3E%3Ctext font-family='Arial' font-size='16' x='20' y='20' text-anchor='middle'%3E?%3C/text%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-          backgroundRepeat: 'repeat'
-        }}></div>
+    <div className="bg-red-500 rounded-2xl shadow-2xl p-6 relative overflow-hidden">
+      {/* Background Pattern - Random Blue Question Marks */}
+      <div className="absolute inset-0 opacity-30">
+        {[...Array(30)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute text-blue-500 text-lg font-bold"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              transform: `rotate(${Math.random() * 360}deg)`,
+              fontSize: `${12 + Math.random() * 8}px`,
+            }}
+          >
+            ?
+          </div>
+        ))}
       </div>
 
       {/* Board Header */}
@@ -36,7 +46,11 @@ const GameBoard = ({ characters, eliminatedCharacters, onCharacterClick, isMyTur
                 className={`relative group cursor-pointer transition-all duration-300 ${
                   isMyTurn ? 'hover:scale-105' : 'cursor-not-allowed'
                 }`}
-                onClick={() => onCharacterClick(character.id)}
+                onClick={() => {
+                  if (isMyTurn) {
+                    onCharacterClick(character.id);
+                  }
+                }}
               >
                 {/* Character Card */}
                 <div className={`relative aspect-square rounded-lg border-2 transition-all duration-300 ${
@@ -61,14 +75,10 @@ const GameBoard = ({ characters, eliminatedCharacters, onCharacterClick, isMyTur
                   )}
 
                   {/* Character Name */}
-                  <div className="absolute -bottom-6 left-0 right-0">
-                    <div className={`text-center px-1 py-1 rounded text-xs font-bold ${
-                      isEliminated 
-                        ? 'bg-gray-200 text-gray-600' 
-                        : 'bg-white text-gray-800 shadow-sm'
-                    }`}>
+                  <div className="absolute bottom-0 left-0 right-0 bg-white rounded-b-lg p-1">
+                    <p className="text-xs font-bold text-gray-800 text-center truncate">
                       {character.name}
-                    </div>
+                    </p>
                   </div>
 
                   {/* Hover Effect */}

@@ -134,7 +134,7 @@ const GamePage = () => {
 
   if (gameState === "waiting" || gameState === "theme-selection") {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-red-500 to-blue-600 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center p-4">
         <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full text-center">
           <div className="text-6xl mb-4">🎮</div>
           <h2 className="text-2xl font-bold text-gray-800 mb-4">
@@ -145,7 +145,7 @@ const GamePage = () => {
           </p>
           <button
             onClick={handleGoHome}
-            className="bg-gradient-to-r from-gray-500 to-gray-600 hover:from-gray-600 hover:to-gray-700 text-white font-bold py-3 px-6 rounded-lg transition-all duration-200"
+            className="bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-6 rounded-lg transition-all duration-200"
           >
             Go Home
           </button>
@@ -155,13 +155,13 @@ const GamePage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-500 to-blue-600 p-4">
+    <div className="min-h-screen bg-gray-100 p-4">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="bg-white rounded-2xl shadow-2xl p-6 mb-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <div className="bg-gradient-to-r from-red-500 to-blue-600 rounded-full p-3">
+              <div className="bg-red-500 rounded-full p-3">
                 <span className="text-white text-xl font-bold">?</span>
               </div>
               <div>
@@ -174,7 +174,7 @@ const GamePage = () => {
               {/* Turn Indicator */}
               <div className={`px-4 py-2 rounded-lg font-semibold ${
                 isMyTurn 
-                  ? 'bg-gradient-to-r from-green-500 to-green-600 text-white' 
+                  ? 'bg-green-500 text-white' 
                   : 'bg-gray-200 text-gray-600'
               }`}>
                 {isMyTurn ? 'Your Turn' : 'Opponent\'s Turn'}
@@ -252,9 +252,9 @@ const GamePage = () => {
 
         {/* Last Question/Answer Display */}
         {lastQuestion && lastAnswer !== null && (
-          <div className="mt-6 bg-white rounded-2xl shadow-2xl p-6">
+          <div className="lg:col-span-2 mt-6 bg-white rounded-2xl shadow-2xl p-6">
             <h3 className="text-xl font-bold text-gray-800 mb-4">Last Question & Answer</h3>
-            <div className="bg-gradient-to-r from-yellow-100 to-yellow-200 rounded-xl p-4 border-2 border-yellow-300">
+            <div className="bg-yellow-100 rounded-xl p-4 border-2 border-yellow-300">
               <p className="text-gray-700 text-lg">
                 <span className="font-semibold">Q:</span> "{lastQuestion}"
               </p>

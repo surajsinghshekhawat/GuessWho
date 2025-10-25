@@ -73,21 +73,39 @@ const WinnerPage = () => {
   const opponentRemainingCount = characters.length - opponentEliminatedCharacters.length;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-500 to-blue-600 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-5xl w-full">
+    <div className="min-h-screen bg-red-500 relative overflow-hidden flex items-center justify-center p-4">
+      {/* Background Pattern - Random Blue Question Marks */}
+      <div className="absolute inset-0 opacity-50">
+        {[...Array(50)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute text-blue-500 text-2xl font-bold"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              transform: `rotate(${Math.random() * 360}deg)`,
+              fontSize: `${20 + Math.random() * 20}px`,
+            }}
+          >
+            ?
+          </div>
+        ))}
+      </div>
+
+      <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-5xl w-full relative z-10">
         
         {/* Header */}
         <div className="text-center mb-8">
           <div className="text-6xl mb-4">
             {isCorrect ? "🎉" : "😔"}
           </div>
-          <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-red-600 to-blue-600 bg-clip-text text-transparent">
+          <h1 className="text-4xl font-bold mb-4 text-gray-800">
             {isCorrect ? "Congratulations!" : "Game Over"}
           </h1>
           <h2 className="text-3xl font-semibold mb-6 text-gray-800">
             {winnerName} Wins!
           </h2>
-          <div className="bg-gradient-to-r from-yellow-100 to-yellow-200 rounded-xl p-6 mb-8 border-2 border-yellow-300">
+          <div className="bg-yellow-100 rounded-xl p-6 mb-8 border-2 border-yellow-300">
             <p className="text-xl text-gray-700">
               {isCorrect
                 ? `You correctly guessed ${correctCharacter?.name}!`
@@ -97,7 +115,7 @@ const WinnerPage = () => {
         </div>
 
         {/* Secret Characters Display */}
-        <div className="bg-gradient-to-r from-red-50 to-blue-50 rounded-2xl p-8 mb-8 border-2 border-gray-200">
+        <div className="bg-gray-50 rounded-2xl p-8 mb-8 border-2 border-gray-200">
           <h3 className="text-2xl font-bold text-center mb-8 text-gray-800">Secret Characters</h3>
           <div className="grid md:grid-cols-2 gap-8">
             {/* Winner's Character */}

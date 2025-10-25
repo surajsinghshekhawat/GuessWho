@@ -443,24 +443,45 @@ const registerSocketHandlers = (io) => {
 
       // Only reset game state if it's currently finished
       if (room.gameState === "finished") {
-        // Reset game state but keep players and room settings
-        room.gameState = "waiting";
-        room.characters = [];
-        room.playerCharacters.clear();
-        room.eliminatedCharacters.clear();
-        room.currentTurn = null;
-        room.turnCount = 0;
-        room.currentQuestion = null;
-        room.currentAnswer = null;
-        room.waitingForAnswer = false;
+        // Initialize playAgainPlayers if it doesn't exist
+        if (!room.playAgainPlayers) {
+          room.playAgainPlayers = new Set();
+        }
 
-        // Notify all players in the room that the game has been reset
-        io.to(roomCode).emit("gameReset", {
-          gameState: "waiting",
-          players: room.players,
-        });
+        // Add current player to playAgainPlayers
+        room.playAgainPlayers.add(socket.id);
 
-        console.log(`Player ${socket.id} requested play again for room ${roomCode} - game reset`);
+        // Check if all players have clicked play again
+        if (room.playAgainPlayers.size === room.players.length) {
+          // Reset game state but keep players and room settings
+          room.gameState = "waiting";
+          room.characters = [];
+          room.playerCharacters.clear();
+          room.eliminatedCharacters.clear();
+          room.currentTurn = null;
+          room.turnCount = 0;
+          room.currentQuestion = null;
+          room.currentAnswer = null;
+          room.waitingForAnswer = false;
+          room.playAgainPlayers.clear(); // Clear the set
+
+          // Notify all players in the room that the game has been reset
+          io.to(roomCode).emit("gameReset", {
+            gameState: "waiting",
+            players: room.players,
+          });
+
+          console.log(`All players requested play again for room ${roomCode} - game reset`);
+        } else {
+          // Notify all players that someone clicked play again
+          io.to(roomCode).emit("playerPlayAgain", {
+            playerId: socket.id,
+            playersReady: room.playAgainPlayers.size,
+            totalPlayers: room.players.length,
+          });
+
+          console.log(`Player ${socket.id} requested play again for room ${roomCode} - waiting for others`);
+        }
       } else {
         console.log(`Player ${socket.id} requested play again for room ${roomCode} - game already reset`);
       }

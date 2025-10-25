@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useGame } from "../store/GameStore";
-import { themes } from "../data/characters";
+import { themes, characters } from "../data/characters";
 
 const LobbyPage = () => {
   const { roomCode } = useParams();
@@ -141,32 +141,46 @@ const LobbyPage = () => {
               Choose Theme
             </h2>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-              {themes.map((theme) => (
-                <button
-                  key={theme.id}
-                  onClick={() => handleStartGame(theme.id)}
-                  disabled={players.length < 2 || !isHost}
-                  className={`p-3 sm:p-4 rounded-xl border-2 text-left transition-all duration-200 ${
-                    players.length < 2 || !isHost
-                      ? "border-gray-200 bg-gray-50 opacity-50 cursor-not-allowed"
-                      : "border-gray-200 hover:border-red-300 hover:bg-red-50 shadow-lg hover:shadow-xl transform hover:scale-105"
-                  }`}
-                >
-                  <div className="flex flex-col items-center space-y-2 text-center">
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center">
-                      <span className="text-black text-lg font-bold">?</span>
-                    </div>
-                    <div>
-                      <div className="font-medium text-sm sm:text-base text-gray-800">
-                        {theme.name}
+              {themes.map((theme) => {
+                const themeCharacters = characters[theme.id] || [];
+                const previewCharacters = themeCharacters.slice(0, 4); // Show first 4 characters as preview
+                
+                return (
+                  <button
+                    key={theme.id}
+                    onClick={() => handleStartGame(theme.id)}
+                    disabled={players.length < 2 || !isHost}
+                    className={`p-3 sm:p-4 rounded-xl border-2 text-left transition-all duration-200 ${
+                      players.length < 2 || !isHost
+                        ? "border-gray-200 bg-gray-50 opacity-50 cursor-not-allowed"
+                        : "border-gray-200 hover:border-red-300 hover:bg-red-50 shadow-lg hover:shadow-xl transform hover:scale-105"
+                    }`}
+                  >
+                    <div className="flex flex-col items-center space-y-2 text-center">
+                      {/* Character Preview Grid */}
+                      <div className="grid grid-cols-2 gap-1 w-12 h-12 sm:w-16 sm:h-16">
+                        {previewCharacters.map((character, index) => (
+                          <div key={index} className="aspect-square rounded border border-gray-300 overflow-hidden">
+                            <img
+                              src={character.image}
+                              alt={character.name}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                        ))}
                       </div>
-                      <div className="text-xs sm:text-sm text-gray-600 hidden sm:block">
-                        {theme.description}
+                      <div>
+                        <div className="font-medium text-sm sm:text-base text-gray-800">
+                          {theme.name}
+                        </div>
+                        <div className="text-xs sm:text-sm text-gray-600 hidden sm:block">
+                          {theme.description}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </button>
-              ))}
+                  </button>
+                );
+              })}
             </div>
 
             {players.length < 2 && (

@@ -195,6 +195,12 @@ const useGameStore = create((set, get) => ({
       console.log("Opponent made wrong guess:", data.opponentName);
     });
 
+    socket.on("playerPlayAgain", (data) => {
+      console.log("PlayerPlayAgain event received:", data);
+      // Could show a notification that another player clicked play again
+      // For now, just log it
+    });
+
     socket.on("gameReset", (data) => {
       console.log("GameStore - gameReset received:", data);
       set({

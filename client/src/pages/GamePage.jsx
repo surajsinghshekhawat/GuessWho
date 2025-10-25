@@ -243,6 +243,15 @@ const GamePage = () => {
                 />
               </div>
               
+              {/* Ask Question Button */}
+              <button
+                onClick={handleAskQuestion}
+                disabled={!myQuestion.trim()}
+                className="bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400 text-white font-bold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl disabled:transform-none disabled:shadow-none"
+              >
+                Ask
+              </button>
+              
               {/* OR Divider */}
               <div className="flex items-center gap-2 text-gray-500 font-semibold">
                 <div className="w-8 h-px bg-gray-300"></div>
@@ -250,22 +259,13 @@ const GamePage = () => {
                 <div className="w-8 h-px bg-gray-300"></div>
               </div>
               
-              {/* Action Buttons */}
-              <div className="flex gap-3">
-                <button
-                  onClick={handleAskQuestion}
-                  disabled={!myQuestion.trim()}
-                  className="bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400 text-white font-bold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl disabled:transform-none disabled:shadow-none"
-                >
-                  Ask Question
-                </button>
-                <button
-                  onClick={() => setShowGuessModal(true)}
-                  className="bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
-                >
-                  Make a Guess
-                </button>
-              </div>
+              {/* Make a Guess Button */}
+              <button
+                onClick={() => setShowGuessModal(true)}
+                className="bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
+              >
+                Make a Guess
+              </button>
             </div>
           </div>
         )}

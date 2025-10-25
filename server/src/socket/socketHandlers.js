@@ -454,6 +454,12 @@ const registerSocketHandlers = (io) => {
         room.currentAnswer = null;
         room.waitingForAnswer = false;
 
+        // Notify all players in the room that the game has been reset
+        io.to(roomCode).emit("gameReset", {
+          gameState: "waiting",
+          players: room.players,
+        });
+
         console.log(`Player ${socket.id} requested play again for room ${roomCode} - game reset`);
       } else {
         console.log(`Player ${socket.id} requested play again for room ${roomCode} - game already reset`);

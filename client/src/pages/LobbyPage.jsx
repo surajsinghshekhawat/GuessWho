@@ -153,8 +153,8 @@ const LobbyPage = () => {
                   }`}
                 >
                   <div className="flex flex-col items-center space-y-2 text-center">
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 bg-red-500 rounded-lg flex items-center justify-center">
-                      <span className="text-white text-lg font-bold">?</span>
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg flex items-center justify-center">
+                      <span className="text-black text-lg font-bold">?</span>
                     </div>
                     <div>
                       <div className="font-medium text-sm sm:text-base text-gray-800">

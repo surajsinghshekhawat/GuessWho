@@ -161,8 +161,8 @@ const GamePage = () => {
         <div className="bg-white rounded-2xl shadow-2xl p-6 mb-6">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <div className="bg-red-500 rounded-full p-3">
-                <span className="text-white text-xl font-bold">?</span>
+              <div className="rounded-full p-3">
+                <span className="text-black text-xl font-bold">?</span>
               </div>
               <div>
                 <h1 className="text-2xl font-bold text-gray-800">Guess Who</h1>
@@ -226,45 +226,62 @@ const GamePage = () => {
           </div>
         </div>
 
-        {/* Question Input */}
+        {/* Combined Question Input and Game Actions */}
         {isMyTurn && !hasAskedQuestion && !hasMadeGuess && (
           <div className="mt-6 bg-white rounded-2xl shadow-2xl p-6">
-            <h3 className="text-xl font-bold text-gray-800 mb-4">Ask a Question</h3>
-            <div className="flex space-x-4">
-              <input
-                type="text"
-                value={myQuestion}
-                onChange={(e) => setMyQuestion(e.target.value)}
-                placeholder="Does your person wear glasses?"
-                className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
-                onKeyPress={(e) => e.key === 'Enter' && handleAskQuestion()}
-              />
-              <button
-                onClick={handleAskQuestion}
-                disabled={!myQuestion.trim()}
-                className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 disabled:from-gray-400 disabled:to-gray-500 text-white font-bold py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 disabled:transform-none disabled:cursor-not-allowed shadow-lg"
-              >
-                Ask Question
-              </button>
+            <h3 className="text-xl font-bold text-gray-800 mb-4">Your Turn</h3>
+            <div className="flex flex-col lg:flex-row gap-4 items-center">
+              {/* Question Input */}
+              <div className="flex-1 w-full">
+                <input
+                  type="text"
+                  value={myQuestion}
+                  onChange={(e) => setMyQuestion(e.target.value)}
+                  placeholder="Ask a yes/no question..."
+                  className="w-full px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  onKeyPress={(e) => e.key === "Enter" && handleAskQuestion()}
+                />
+              </div>
+              
+              {/* OR Divider */}
+              <div className="flex items-center gap-2 text-gray-500 font-semibold">
+                <div className="w-8 h-px bg-gray-300"></div>
+                <span>OR</span>
+                <div className="w-8 h-px bg-gray-300"></div>
+              </div>
+              
+              {/* Action Buttons */}
+              <div className="flex gap-3">
+                <button
+                  onClick={handleAskQuestion}
+                  disabled={!myQuestion.trim()}
+                  className="bg-blue-500 hover:bg-blue-600 disabled:bg-gray-400 text-white font-bold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl disabled:transform-none disabled:shadow-none"
+                >
+                  Ask Question
+                </button>
+                <button
+                  onClick={() => setShowGuessModal(true)}
+                  className="bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-6 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl"
+                >
+                  Make a Guess
+                </button>
+              </div>
             </div>
           </div>
         )}
 
-        {/* Last Question/Answer Display - Parallel with Game Actions */}
+        {/* Last Question/Answer Display - Full Width */}
         {lastQuestion && lastAnswer !== null && (
-          <div className="mt-6 grid lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2 bg-white rounded-2xl shadow-2xl p-6">
-              <h3 className="text-xl font-bold text-gray-800 mb-4">Last Question & Answer</h3>
-              <div className="bg-yellow-100 rounded-xl p-4 border-2 border-yellow-300">
-                <p className="text-gray-700 text-lg">
-                  <span className="font-semibold">Q:</span> "{lastQuestion}"
-                </p>
-                <p className="text-gray-700 text-lg mt-2">
-                  <span className="font-semibold">A:</span> {lastAnswer ? "Yes" : "No"}
-                </p>
-              </div>
+          <div className="mt-6 bg-white rounded-2xl shadow-2xl p-6">
+            <h3 className="text-xl font-bold text-gray-800 mb-4">Last Question & Answer</h3>
+            <div className="bg-yellow-100 rounded-xl p-4 border-2 border-yellow-300">
+              <p className="text-gray-700 text-lg">
+                <span className="font-semibold">Q:</span> "{lastQuestion}"
+              </p>
+              <p className="text-gray-700 text-lg mt-2">
+                <span className="font-semibold">A:</span> {lastAnswer ? "Yes" : "No"}
+              </p>
             </div>
-            <div className="lg:col-span-1"></div>
           </div>
         )}
       </div>

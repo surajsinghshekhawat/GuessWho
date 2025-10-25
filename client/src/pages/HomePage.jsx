@@ -4,7 +4,8 @@ import { useGame } from "../store/GameStore";
 
 const HomePage = () => {
   const navigate = useNavigate();
-  const { createRoom, joinRoom, roomCode, connectSocket, isConnected } = useGame();
+  const { createRoom, joinRoom, roomCode, connectSocket, isConnected } =
+    useGame();
   const [username, setUsername] = useState("");
   const [inputRoomCode, setInputRoomCode] = useState("");
   const [isCreating, setIsCreating] = useState(false);
@@ -12,23 +13,40 @@ const HomePage = () => {
 
   // Connect socket on component mount
   useEffect(() => {
+    console.log("=== SOCKET CONNECTION DEBUG ===");
+    console.log("isConnected:", isConnected);
     if (!isConnected) {
       console.log("Connecting socket...");
       connectSocket("Guest");
+    } else {
+      console.log("Socket already connected");
     }
   }, [isConnected, connectSocket]);
 
   const handleCreateRoom = async () => {
-    if (!username.trim()) return;
+    console.log("=== CREATE ROOM BUTTON CLICKED ===");
+    console.log("Username:", username);
+    console.log("Username trimmed:", username.trim());
+    console.log("Is creating:", isCreating);
+    
+    if (!username.trim()) {
+      console.log("No username provided, returning");
+      return;
+    }
+    
     console.log("Creating room with username:", username);
     setIsCreating(true);
+    
     try {
+      console.log("About to call createRoom function");
       await createRoom(username);
       console.log("Create room called successfully");
     } catch (error) {
       console.error("Error creating room:", error);
     }
+    
     setIsCreating(false);
+    console.log("Create room process completed");
   };
 
   const handleJoinRoom = async () => {
@@ -40,22 +58,32 @@ const HomePage = () => {
 
   // Navigate to lobby when room is created or joined
   useEffect(() => {
+    console.log("=== ROOM CODE DEBUG ===");
+    console.log("roomCode:", roomCode);
     if (roomCode) {
+      console.log("Room code exists, navigating to lobby:", `/lobby/${roomCode}`);
       navigate(`/lobby/${roomCode}`);
     }
   }, [roomCode, navigate]);
 
   return (
     <div className="min-h-screen bg-red-500 relative overflow-hidden">
-      {/* Background Pattern - Blue Question Marks */}
+      {/* Background Pattern - Random Blue Question Marks */}
       <div className="absolute inset-0 opacity-30">
-        <div
-          className="absolute inset-0"
-          style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%233b82f6' fill-opacity='0.6'%3E%3Ctext font-family='Arial' font-size='24' x='30' y='30' text-anchor='middle'%3E?%3C/text%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`,
-            backgroundRepeat: "repeat",
-          }}
-        ></div>
+        {[...Array(50)].map((_, i) => (
+          <div
+            key={i}
+            className="absolute text-blue-500 text-2xl font-bold"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`,
+              transform: `rotate(${Math.random() * 360}deg)`,
+              fontSize: `${20 + Math.random() * 20}px`,
+            }}
+          >
+            ?
+          </div>
+        ))}
       </div>
 
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen p-4">
@@ -209,7 +237,10 @@ const HomePage = () => {
             {/* Create Room */}
             <div className="mb-6">
               <button
-                onClick={handleCreateRoom}
+                onClick={() => {
+                  console.log("BUTTON CLICKED - TEST");
+                  handleCreateRoom();
+                }}
                 disabled={!username.trim() || isCreating}
                 className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 disabled:from-gray-400 disabled:to-gray-500 text-white font-bold py-3 px-6 rounded-lg transition-all duration-200 transform hover:scale-105 disabled:transform-none disabled:cursor-not-allowed shadow-lg"
               >

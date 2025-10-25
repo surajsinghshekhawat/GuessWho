@@ -30,23 +30,6 @@ const WinnerPage = () => {
     roomCode
   });
 
-  // Handle game reset - navigate to lobby when game is reset
-  useEffect(() => {
-    const handleGameReset = () => {
-      console.log("WinnerPage - Game reset received, navigating to lobby");
-      navigate(`/lobby/${roomCode}`);
-    };
-
-    // Listen for gameReset event
-    if (socket) {
-      socket.on("gameReset", handleGameReset);
-      
-      return () => {
-        socket.off("gameReset", handleGameReset);
-      };
-    }
-  }, [navigate, roomCode, socket]);
-
   // Get winner name with robust fallback
   const getWinnerName = () => {
     console.log("WinnerPage - winner:", winner, "winnerId:", winnerId, "players:", players);
@@ -90,39 +73,37 @@ const WinnerPage = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-6xl w-full max-h-[90vh] overflow-y-auto">
+      <div className="bg-white rounded-xl shadow-lg p-6 max-w-4xl w-full">
         
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-6xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+        <div className="text-center mb-6">
+          <h1 className="text-3xl font-bold mb-2 text-gray-800">
             {isCorrect ? "Congratulations!" : "Game Over"}
           </h1>
-          <h2 className="text-4xl font-semibold mb-6 text-gray-800">
+          <h2 className="text-2xl font-semibold mb-4 text-gray-700">
             {winnerName} Wins!
           </h2>
-          <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6 mb-8">
-            <p className="text-2xl text-gray-700">
-              {isCorrect
-                ? `You correctly guessed ${correctCharacter?.name}!`
-                : `The correct answer was ${correctCharacter?.name}`}
-            </p>
-          </div>
+          <p className="text-lg text-gray-600">
+            {isCorrect
+              ? `You correctly guessed ${correctCharacter?.name}!`
+              : `The correct answer was ${correctCharacter?.name}`}
+          </p>
         </div>
 
         {/* Secret Characters Display */}
-        <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-2xl p-8 mb-8">
-          <h3 className="text-3xl font-bold text-center mb-8 text-gray-800">Secret Characters</h3>
-          <div className="grid md:grid-cols-2 gap-8">
+        <div className="bg-gray-50 rounded-lg p-4 mb-6">
+          <h3 className="text-lg font-semibold text-center mb-4 text-gray-700">Secret Characters</h3>
+          <div className="grid md:grid-cols-2 gap-4">
             {/* Winner's Character */}
             <div className="text-center">
-              <h4 className="text-xl font-semibold mb-4 text-green-600">Winner's Character</h4>
-              <div className="bg-white rounded-xl p-6 shadow-lg border-4 border-green-400">
+              <h4 className="text-sm font-medium mb-2 text-green-600">Winner</h4>
+              <div className="bg-white rounded-lg p-3 border-2 border-green-400">
                 <img
                   src={isCorrect ? mySecretCharacter?.image : opponentSecretCharacter?.image}
                   alt={isCorrect ? mySecretCharacter?.name : opponentSecretCharacter?.name}
-                  className="w-40 h-40 rounded-xl mx-auto mb-4 object-cover"
+                  className="w-20 h-20 rounded-lg mx-auto mb-2 object-cover"
                 />
-                <p className="text-xl font-semibold text-gray-800">
+                <p className="text-sm font-medium text-gray-800">
                   {isCorrect ? mySecretCharacter?.name : opponentSecretCharacter?.name}
                 </p>
               </div>
@@ -130,14 +111,14 @@ const WinnerPage = () => {
             
             {/* Loser's Character */}
             <div className="text-center">
-              <h4 className="text-xl font-semibold mb-4 text-red-600">Opponent's Character</h4>
-              <div className="bg-white rounded-xl p-6 shadow-lg border-4 border-red-400">
+              <h4 className="text-sm font-medium mb-2 text-red-600">Opponent</h4>
+              <div className="bg-white rounded-lg p-3 border-2 border-red-400">
                 <img
                   src={isCorrect ? opponentSecretCharacter?.image : mySecretCharacter?.image}
                   alt={isCorrect ? opponentSecretCharacter?.name : mySecretCharacter?.name}
-                  className="w-40 h-40 rounded-xl mx-auto mb-4 object-cover"
+                  className="w-20 h-20 rounded-lg mx-auto mb-2 object-cover"
                 />
-                <p className="text-xl font-semibold text-gray-800">
+                <p className="text-sm font-medium text-gray-800">
                   {isCorrect ? opponentSecretCharacter?.name : mySecretCharacter?.name}
                 </p>
               </div>
@@ -146,89 +127,89 @@ const WinnerPage = () => {
         </div>
 
         {/* Final Boards */}
-        <div className="grid md:grid-cols-2 gap-8 mb-8">
+        <div className="grid md:grid-cols-2 gap-4 mb-6">
           {/* Your Final Board */}
-          <div className="bg-blue-50 rounded-xl p-6">
-            <h4 className="text-xl font-semibold mb-4 text-blue-600">Your Final Board</h4>
-            <div className="grid grid-cols-6 gap-2">
+          <div className="bg-blue-50 rounded-lg p-4">
+            <h4 className="text-sm font-semibold mb-3 text-blue-600">Your Board</h4>
+            <div className="grid grid-cols-6 gap-1">
               {characters.map((character) => {
                 const isEliminated = myEliminatedCharacters.includes(character.id);
                 return (
                   <div
                     key={character.id}
-                    className={`relative aspect-square rounded-lg border-2 transition-all duration-300 ${
+                    className={`relative aspect-square rounded border transition-all duration-300 ${
                       isEliminated
                         ? "border-red-400 bg-red-100 opacity-60"
-                        : "border-gray-300 bg-gray-50 hover:shadow-md"
+                        : "border-gray-300 bg-gray-50"
                     }`}
                   >
                     {!isEliminated ? (
                       <img
                         src={character.image}
                         alt={character.name}
-                        className="w-full h-full object-cover rounded-lg"
+                        className="w-full h-full object-cover rounded"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-red-100 rounded-lg">
-                        <span className="text-red-500 text-xl font-bold">✕</span>
+                      <div className="w-full h-full flex items-center justify-center bg-red-100 rounded">
+                        <span className="text-red-500 text-sm font-bold">✕</span>
                       </div>
                     )}
                   </div>
                 );
               })}
             </div>
-            <p className="text-sm text-gray-600 mt-2">
-              Remaining: {myRemainingCount} characters
+            <p className="text-xs text-gray-600 mt-2">
+              Remaining: {myRemainingCount}
             </p>
           </div>
 
           {/* Opponent's Final Board */}
-          <div className="bg-purple-50 rounded-xl p-6">
-            <h4 className="text-xl font-semibold mb-4 text-purple-600">Opponent's Final Board</h4>
-            <div className="grid grid-cols-6 gap-2">
+          <div className="bg-purple-50 rounded-lg p-4">
+            <h4 className="text-sm font-semibold mb-3 text-purple-600">Opponent's Board</h4>
+            <div className="grid grid-cols-6 gap-1">
               {characters.map((character) => {
                 const isEliminated = opponentEliminatedCharacters.includes(character.id);
                 return (
                   <div
                     key={character.id}
-                    className={`relative aspect-square rounded-lg border-2 transition-all duration-300 ${
+                    className={`relative aspect-square rounded border transition-all duration-300 ${
                       isEliminated
                         ? "border-red-400 bg-red-100 opacity-60"
-                        : "border-gray-300 bg-gray-50 hover:shadow-md"
+                        : "border-gray-300 bg-gray-50"
                     }`}
                   >
                     {!isEliminated ? (
                       <img
                         src={character.image}
                         alt={character.name}
-                        className="w-full h-full object-cover rounded-lg"
+                        className="w-full h-full object-cover rounded"
                       />
                     ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-red-100 rounded-lg">
-                        <span className="text-red-500 text-xl font-bold">✕</span>
+                      <div className="w-full h-full flex items-center justify-center bg-red-100 rounded">
+                        <span className="text-red-500 text-sm font-bold">✕</span>
                       </div>
                     )}
                   </div>
                 );
               })}
             </div>
-            <p className="text-sm text-gray-600 mt-2">
-              Remaining: {opponentRemainingCount} characters
+            <p className="text-xs text-gray-600 mt-2">
+              Remaining: {opponentRemainingCount}
             </p>
           </div>
         </div>
 
         {/* Action Buttons */}
-        <div className="flex gap-4 justify-center">
+        <div className="flex gap-3 justify-center">
           <button
             onClick={handlePlayAgain}
-            className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 rounded-xl text-xl font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg"
+            className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg text-sm font-medium transition-colors"
           >
             Play Again
           </button>
           <button
             onClick={handleGoHome}
-            className="bg-gradient-to-r from-gray-600 to-gray-700 hover:from-gray-700 hover:to-gray-800 text-white px-8 py-4 rounded-xl text-xl font-semibold transition-all duration-300 transform hover:scale-105 shadow-lg"
+            className="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-lg text-sm font-medium transition-colors"
           >
             Go Home
           </button>

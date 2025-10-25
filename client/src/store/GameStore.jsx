@@ -161,12 +161,8 @@ const useGameStore = create((set, get) => ({
 
     socket.on("gameOver", (data) => {
       console.log("gameOver event received:", data);
-      console.log(
-        "gameOver - data.winner:",
-        data.winner,
-        "typeof:",
-        typeof data.winner
-      );
+      console.log("gameOver - data.winner:", data.winner, "typeof:", typeof data.winner);
+      console.log("gameOver - data.isCorrect:", data.isCorrect, "socket.id:", socket.id);
       set({
         winner: data.winner,
         winnerId: data.winnerId,
@@ -179,7 +175,7 @@ const useGameStore = create((set, get) => ({
         opponentEliminatedCharacters: data.opponentEliminatedCharacters,
         gameState: "finished",
       });
-      console.log("gameOver - set winner to:", data.winner);
+      console.log("gameOver - set winner to:", data.winner, "gameState set to finished");
     });
 
     socket.on("wrongGuess", (data) => {
@@ -200,6 +196,7 @@ const useGameStore = create((set, get) => ({
     });
 
     socket.on("gameReset", (data) => {
+      console.log("GameStore - gameReset received:", data);
       set({
         gameState: data.gameState,
         characters: [],
@@ -225,6 +222,13 @@ const useGameStore = create((set, get) => ({
         lastAnswer: null,
         error: null,
       });
+      
+      // Navigate to lobby if we're on the winner page
+      if (window.location.pathname.includes('/winner/')) {
+        const roomCode = window.location.pathname.split('/winner/')[1];
+        console.log("GameStore - Navigating to lobby:", roomCode);
+        window.location.href = `/lobby/${roomCode}`;
+      }
     });
 
     socket.on("error", (error) => {
